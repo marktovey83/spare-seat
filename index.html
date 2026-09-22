@@ -4,22 +4,27 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Spare Seat</title>
+  <link rel="icon" href="logo.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="css/styles.css" />
   <link rel="stylesheet" href="css/auth.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    .logo-mark { width:36px;height:36px;border-radius:10px;box-shadow:0 0 18px rgba(255,106,26,.45);display:block; }
+    .logo-mark.big { width:88px;height:88px;border-radius:22px;margin:0 auto 12px;box-shadow:0 0 28px rgba(255,106,26,.55); }
+  </style>
 </head>
 <body class="gate-on">
   <div class="app">
     <div class="topbar" id="topbar">
-      <div class="brand"><span class="seat">▭</span> SPARE SEAT</div>
+      <div class="brand"><img class="logo-mark" src="logo.svg" alt="Spare Seat" /> SPARE SEAT</div>
       <div class="tabs-user" id="who"></div>
       <button class="btn ghost" id="btn-out" onclick="logout()">Log out</button>
     </div>
     <div id="toast" class="pill hidden" style="margin-bottom:12px"></div>
     <section id="view-gate">
       <div class="gate-logo">
-        <div class="seat big">▭</div>
+        <img class="logo-mark big" src="logo.svg" alt="Spare Seat" />
         <div class="gate-word">SPARE SEAT</div>
         <p class="muted">Don't watch it alone</p>
       </div>
