@@ -1,27 +1,82 @@
 body.gate-on .topbar { display: none; }
 body.gate-on .footer-help { text-align: center; }
-.gate-logo { text-align: center; padding: 36px 12px 8px; }
-.seat.big { width: 72px; height: 72px; border-radius: 20px; font-size: 34px; margin: 0 auto 12px; box-shadow: 0 0 28px rgba(255,106,26,0.55); }
-.gate-word { font-family: "Bebas Neue", sans-serif; font-size: 48px; letter-spacing: 0.12em; }
+.gate-logo {
+  text-align: center;
+  padding: 36px 12px 8px;
+}
+.seat.big {
+  width: 72px;
+  height: 72px;
+  border-radius: 20px;
+  font-size: 34px;
+  margin: 0 auto 12px;
+  box-shadow: 0 0 28px rgba(255,106,26,0.55);
+}
+.gate-word {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 48px;
+  letter-spacing: 0.12em;
+}
 .auth-wrap { max-width: 420px; margin: 18px auto 0; }
 .auth-switch { display: flex; gap: 8px; margin-bottom: 8px; }
-.auth-switch button { flex: 1; background: rgba(8,16,26,0.55); color: var(--body); border: 1px solid var(--line); box-shadow: none; }
-.auth-switch button.active { background: linear-gradient(135deg, #ff6a1a, #8b5cff); color: #fff; border-color: transparent; }
-.auth-switch.slim button { padding: 8px 12px; font-size: 13px; }
+.auth-switch button {
+  flex: 1;
+  background: rgba(8,16,26,0.55);
+  color: var(--body);
+  border: 1px solid var(--line);
+  box-shadow: none;
+  padding: 8px 12px;
+  font-size: 13px;
+}
+.auth-switch button.active {
+  background: linear-gradient(135deg, #ff6a1a, #8b5cff);
+  color: #fff;
+  border-color: transparent;
+}
 .auth-card { margin-top: 4px; }
 .plan-pick { display: grid; gap: 8px; margin: 8px 0; }
 .plan { display: block; padding: 10px; border-radius: 12px; border: 1px solid var(--line); background: rgba(4,10,18,0.45); font-size: 13px; color: var(--body); }
 .plan.plus { border-color: rgba(255,179,71,0.5); }
-.two-doors { display: grid; gap: 12px; margin: 8px 0 6px; }
-.door { width: 100%; padding: 18px; font-size: 22px; font-family: "Bebas Neue", sans-serif; letter-spacing: 0.08em; background: linear-gradient(135deg, #ff7a1a, #ff4d8d); }
-.door.venue { background: linear-gradient(135deg, #2ee6a6, #1aa7ff); }
-.back-link { background: none; border: 0; color: var(--gold-soft); box-shadow: none; padding: 0 0 10px; font-size: 14px; }
+.two-doors { display: flex; gap: 8px; margin: 8px 0 6px; }
+.door {
+  flex: 1;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-family: Manrope, "Segoe UI", sans-serif;
+  letter-spacing: 0;
+  font-weight: 700;
+  background: rgba(8,16,26,0.55);
+  color: var(--body);
+  border: 1px solid var(--line);
+  box-shadow: none;
+}
+.ad-slot {
+  margin: 14px auto 0;
+  max-width: 420px;
+  min-height: 72px;
+  border-radius: 14px;
+  border: 1px dashed rgba(255,255,255,0.28);
+  background: rgba(8,16,26,0.35);
+  display: grid;
+  place-items: center;
+  text-align: center;
+  color: var(--muted);
+  font-size: 12px;
+}
+.back-link {
+  background: none;
+  border: 0;
+  color: var(--gold-soft);
+  box-shadow: none;
+  padding: 0 0 10px;
+  font-size: 14px;
+}
 body.gate-on::before {
-  filter: saturate(1.45) brightness(1.15);
+  filter: saturate(1.2) brightness(1.05);
   background:
-    linear-gradient(180deg, rgba(255,200,60,0.22) 0%, rgba(7,16,24,0.45) 70%),
-    url("https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?auto=format&fit=crop&w=1600&q=70") left top / 50% 50% no-repeat,
-    url("https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&w=1600&q=70") right top / 50% 50% no-repeat,
-    url("https://images.unsplash.com/photo-1517466787929-bc90951d0974?auto=format&fit=crop&w=1600&q=70") left bottom / 50% 50% no-repeat,
-    url("https://images.unsplash.com/photo-1461896836934-ffe607ba6851?auto=format&fit=crop&w=1600&q=70") right bottom / 50% 50% no-repeat;
+    linear-gradient(180deg, rgba(7,16,24,0.28) 0%, rgba(7,16,24,0.55) 55%, rgba(7,16,24,0.82) 100%),
+    url("https://commons.wikimedia.org/wiki/Special:FilePath/E37_Perth_Stadium_Open_Day_012.JPG") center 30% / cover no-repeat;
+}
+body.gate-on::after {
+  background: radial-gradient(700px 280px at 50% 0%, rgba(255,180,60,0.18), transparent 60%);
 }
