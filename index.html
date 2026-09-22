@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Spare Seat</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div class="app">
+    <div class="topbar">
+      <div class="brand"><span class="seat">▭</span> SPARE SEAT</div>
+      <div class="tabs-user" id="who"></div>
+      <button class="btn ghost" id="btn-out" onclick="logout()">Log out</button>
+    </div>
+    <div id="toast" class="pill hidden" style="margin-bottom:12px"></div>
+    <section id="view-gate">
+      <div class="eyebrow">Don't watch it alone</div>
+      <h1>Find a seat for tonight's game</h1>
+      <p class="lead">Fixtures, pubs showing it, a held table, a shared jug or platter. Not a bookmaker.</p>
+      <div class="grid three" style="margin-top:20px">
+        <div class="card">
+          <div class="eyebrow">Punter</div>
+          <h2>I'm watching</h2>
+          <label>Nickname</label>
+          <input id="p-name" placeholder="Dave" />
+          <label>Suburb</label>
+          <select id="p-sub"></select>
+          <label>Sport</label>
+          <select id="p-sport"></select>
+          <label>Club</label>
+          <select id="p-club"></select>
+          <label>Age band</label>
+          <select id="p-age">
+            <option>30-44</option>
+            <option>18-29</option>
+            <option>45+</option>
+          </select>
+          <button class="btn" style="margin-top:12px" onclick="startPunter()">Enter</button>
+        </div>
+        <div class="card">
+          <div class="eyebrow">Venue</div>
+          <h2>I'm a venue</h2>
+          <label>Pub / club</label>
+          <select id="v-pick"></select>
+          <label>Staff PIN</label>
+          <input id="v-pin" placeholder="4821" type="password" />
+          <p class="muted">Demo PIN for all listed venues: 4821</p>
+          <button class="btn" style="margin-top:12px" onclick="startVenue()">Open door list</button>
+        </div>
+        <div class="card">
+          <div class="eyebrow">Ops</div>
+          <h2>Admin</h2>
+          <label>User</label>
+          <input id="a-user" placeholder="admin" />
+          <label>Password</label>
+          <input id="a-pass" type="password" placeholder="spareseat" />
+          <p class="muted">See punters by area, live tables, flags.</p>
+          <button class="btn" style="margin-top:12px" onclick="startAdmin()">Admin login</button>
+        </div>
+      </div>
+    </section>
+    <section id="view-app" class="hidden">
+      <div class="nav" id="nav-punter">
+        <button class="btn" data-tab="tonight" onclick="showPunter('tonight')">Tonight</button>
+        <button class="btn" data-tab="chats" onclick="showPunter('chats')">Chats</button>
+        <button class="btn" data-tab="friends" onclick="showPunter('friends')">Friends</button>
+        <button class="btn" data-tab="me" onclick="showPunter('me')">Me</button>
+      </div>
+      <div class="nav hidden" id="nav-venue"></div>
+      <div class="nav hidden" id="nav-admin">
+        <button class="btn" data-tab="areas" onclick="showAdmin('areas')">Areas</button>
+        <button class="btn" data-tab="people" onclick="showAdmin('people')">People</button>
+        <button class="btn" data-tab="live" onclick="showAdmin('live')">Live</button>
+        <button class="btn" data-tab="reports" onclick="showAdmin('reports')">Flags</button>
+      </div>
+      <div id="main"></div>
+    </section>
+    <p class="footer-help">Struggling? Lifeline 13 11 14 · MensLine 1300 78 99 78</p>
+  </div>
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
