@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Spare Seat</title>
   <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/auth.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
@@ -24,45 +25,82 @@
       </div>
       <div class="eyebrow">Don't watch it alone</div>
       <h1>Find a seat for tonight's game</h1>
-      <p class="lead">Fixtures, pubs showing it, a held table, a shared jug or platter. Not a bookmaker.</p>
-      <div class="grid three" style="margin-top:20px">
-        <div class="card">
-          <div class="eyebrow">Punter</div>
-          <h2>I'm watching</h2>
-          <label>Nickname</label>
-          <input id="p-name" placeholder="Dave" />
-          <label>Suburb</label>
-          <select id="p-sub"></select>
-          <label>Sport</label>
-          <select id="p-sport"></select>
-          <label>Club</label>
-          <select id="p-club"></select>
-          <label>Age band</label>
-          <select id="p-age">
-            <option>30-44</option>
-            <option>18-29</option>
-            <option>45+</option>
-          </select>
-          <button class="btn" style="margin-top:12px" onclick="startPunter()">Enter</button>
+      <p class="lead">Log in to find a pub showing the match and people heading there. Not a bookmaker.</p>
+      <div class="auth-wrap">
+        <div class="auth-switch">
+          <button type="button" class="active" id="sw-user" onclick="setAuthRole('user')">User</button>
+          <button type="button" id="sw-venue" onclick="setAuthRole('venue')">Venue</button>
         </div>
-        <div class="card">
-          <div class="eyebrow">Venue</div>
-          <h2>I'm a venue</h2>
-          <label>Pub / club</label>
-          <select id="v-pick"></select>
-          <label>Staff PIN</label>
-          <input id="v-pin" placeholder="4821" type="password" />
-          <p class="muted">Demo PIN for all listed venues: 4821</p>
-          <button class="btn" style="margin-top:12px" onclick="startVenue()">Open door list</button>
+        <div class="auth-switch slim">
+          <button type="button" class="active" id="sw-login" onclick="setAuthMode('login')">Log in</button>
+          <button type="button" id="sw-signup" onclick="setAuthMode('signup')">Sign up</button>
         </div>
-        <div class="card">
+        <div class="card auth-card">
+          <div id="auth-user-login">
+            <h2>User login</h2>
+            <label>Name or email</label>
+            <input id="u-login-id" placeholder="Dave" />
+            <label>Password</label>
+            <input id="u-login-pass" type="password" placeholder="Password" />
+            <p class="muted">Demo accounts: Dave / seat · Sarah / seat</p>
+            <button class="btn" style="margin-top:12px" onclick="userLogin()">Log in</button>
+          </div>
+          <div id="auth-user-signup" class="hidden">
+            <h2>Create a user account</h2>
+            <label>Name</label>
+            <input id="u-name" placeholder="Your name" />
+            <label>Email</label>
+            <input id="u-email" placeholder="you@email.com" />
+            <label>Password</label>
+            <input id="u-pass" type="password" placeholder="Choose a password" />
+            <label>Suburb</label>
+            <select id="p-sub"></select>
+            <label>Sport</label>
+            <select id="p-sport"></select>
+            <label>Club you follow</label>
+            <select id="p-club"></select>
+            <label>Age band</label>
+            <select id="p-age">
+              <option>30-44</option>
+              <option>18-29</option>
+              <option>45+</option>
+            </select>
+            <button class="btn" style="margin-top:12px" onclick="userSignup()">Create account</button>
+          </div>
+          <div id="auth-venue-login" class="hidden">
+            <h2>Venue login</h2>
+            <label>Pub / club</label>
+            <select id="v-pick"></select>
+            <label>Password or staff PIN</label>
+            <input id="v-pin" type="password" placeholder="Password or PIN" />
+            <p class="muted">Listed demo venues: PIN 4821 or password seat</p>
+            <button class="btn" style="margin-top:12px" onclick="venueLogin()">Log in</button>
+          </div>
+          <div id="auth-venue-signup" class="hidden">
+            <h2>List your venue</h2>
+            <label>Venue name</label>
+            <input id="vs-name" placeholder="The Freo Hotel" />
+            <label>Email</label>
+            <input id="vs-email" placeholder="door@thepub.com" />
+            <label>Suburb</label>
+            <select id="vs-sub"></select>
+            <label>Password</label>
+            <input id="vs-pass" type="password" placeholder="Choose a password" />
+            <label>Staff PIN (4 digits)</label>
+            <input id="vs-pin" placeholder="4821" />
+            <button class="btn" style="margin-top:12px" onclick="venueSignup()">Create venue</button>
+          </div>
+        </div>
+        <p class="muted" style="text-align:center;margin-top:10px">
+          <a href="#" onclick="toggleAdmin(); return false;">Staff admin</a>
+        </p>
+        <div id="admin-box" class="card hidden">
           <div class="eyebrow">Ops</div>
           <h2>Admin</h2>
           <label>User</label>
           <input id="a-user" placeholder="admin" />
           <label>Password</label>
           <input id="a-pass" type="password" placeholder="spareseat" />
-          <p class="muted">See punters by area, live tables, flags.</p>
           <button class="btn" style="margin-top:12px" onclick="startAdmin()">Admin login</button>
         </div>
       </div>
@@ -88,6 +126,7 @@
   </div>
   <script src="js/data.js"></script>
   <script src="js/app.js"></script>
+  <script src="js/auth.js"></script>
   <script src="js/map.js"></script>
 </body>
 </html>
