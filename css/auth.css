@@ -14,3 +14,6 @@
 }
 .auth-switch.slim button { padding: 8px 12px; font-size: 13px; }
 .auth-card { margin-top: 4px; }
+.plan-pick { display: grid; gap: 8px; margin: 8px 0; }
+.plan { display: block; padding: 10px; border-radius: 12px; border: 1px solid var(--line); background: rgba(4,10,18,0.45); font-size: 13px; color: var(--body); }
+.plan.plus { border-color: rgba(255,179,71,0.5); }
