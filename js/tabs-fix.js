@@ -3,15 +3,15 @@
   if (!orig) return;
   window.showPunter = function (tab) {
     orig(tab);
-    if (tab === "tonight" || tab === "today" || tab === "friends" || tab === "me") {
+    if (tab === "tonight" || tab === "today" || tab === "me") {
       const m = document.getElementById("punter-map");
       if (m) m.remove();
       return;
     }
-    if (tab === "chats") {
+    if (tab === "chats" || tab === "friends") {
       const m = document.getElementById("punter-map");
       if (m) m.classList.add("chat-map");
-      if (!document.getElementById("lounge-note")) {
+      if (tab === "chats" && !document.getElementById("lounge-note")) {
         const note = document.createElement("div");
         note.id = "lounge-note";
         note.className = "card";
