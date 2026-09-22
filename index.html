@@ -9,23 +9,20 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
-<body>
+<body class="gate-on">
   <div class="app">
-    <div class="topbar">
+    <div class="topbar" id="topbar">
       <div class="brand"><span class="seat">▭</span> SPARE SEAT</div>
       <div class="tabs-user" id="who"></div>
       <button class="btn ghost" id="btn-out" onclick="logout()">Log out</button>
     </div>
     <div id="toast" class="pill hidden" style="margin-bottom:12px"></div>
     <section id="view-gate">
-      <div class="hero-strip">
-        <div class="hero-shot shot-a"><span>TONIGHT'S GAME</span></div>
-        <div class="hero-shot shot-b"><span>THE PUB</span></div>
-        <div class="hero-shot shot-c"><span>YOUR TABLE</span></div>
+      <div class="gate-logo">
+        <div class="seat big">▭</div>
+        <div class="gate-word">SPARE SEAT</div>
+        <p class="muted">Don't watch it alone</p>
       </div>
-      <div class="eyebrow">Don't watch it alone</div>
-      <h1>Find a seat for tonight's game</h1>
-      <p class="lead">Log in to find a pub showing the match and people heading there. Not a bookmaker.</p>
       <div class="auth-wrap">
         <div class="auth-switch">
           <button type="button" class="active" id="sw-user" onclick="setAuthRole('user')">User</button>
@@ -33,7 +30,7 @@
         </div>
         <div class="auth-switch slim">
           <button type="button" class="active" id="sw-login" onclick="setAuthMode('login')">Log in</button>
-          <button type="button" id="sw-signup" onclick="setAuthMode('signup')">Sign up</button>
+          <button type="button" id="sw-signup" onclick="setAuthMode('signup')">Register</button>
         </div>
         <div class="card auth-card">
           <div id="auth-user-login">
@@ -42,11 +39,11 @@
             <input id="u-login-id" placeholder="Dave" />
             <label>Password</label>
             <input id="u-login-pass" type="password" placeholder="Password" />
-            <p class="muted">Demo accounts: Dave / seat · Sarah / seat</p>
+            <p class="muted">Demo: Dave / seat</p>
             <button class="btn" style="margin-top:12px" onclick="userLogin()">Log in</button>
           </div>
           <div id="auth-user-signup" class="hidden">
-            <h2>Create a user account</h2>
+            <h2>User register</h2>
             <label>Name</label>
             <input id="u-name" placeholder="Your name" />
             <label>Email</label>
@@ -60,12 +57,13 @@
             <label>Club you follow</label>
             <select id="p-club"></select>
             <label>Age band</label>
-            <select id="p-age">
-              <option>30-44</option>
-              <option>18-29</option>
-              <option>45+</option>
-            </select>
-            <button class="btn" style="margin-top:12px" onclick="userSignup()">Create account</button>
+            <select id="p-age"><option>30-44</option><option>18-29</option><option>45+</option></select>
+            <label>Plan</label>
+            <div class="plan-pick">
+              <label class="plan"><input type="radio" name="u-plan" value="free" checked /> <b>Free</b> — 10 km</label>
+              <label class="plan plus"><input type="radio" name="u-plan" value="plus" /> <b>Plus $15/mo</b> — any distance, friends, full list</label>
+            </div>
+            <button class="btn" style="margin-top:12px" onclick="userSignup()">Register</button>
           </div>
           <div id="auth-venue-login" class="hidden">
             <h2>Venue login</h2>
@@ -73,11 +71,11 @@
             <select id="v-pick"></select>
             <label>Password or staff PIN</label>
             <input id="v-pin" type="password" placeholder="Password or PIN" />
-            <p class="muted">Listed demo venues: PIN 4821 or password seat</p>
+            <p class="muted">Demo PIN 4821</p>
             <button class="btn" style="margin-top:12px" onclick="venueLogin()">Log in</button>
           </div>
           <div id="auth-venue-signup" class="hidden">
-            <h2>List your venue</h2>
+            <h2>Venue register</h2>
             <label>Venue name</label>
             <input id="vs-name" placeholder="The Freo Hotel" />
             <label>Email</label>
@@ -85,22 +83,17 @@
             <label>Suburb</label>
             <select id="vs-sub"></select>
             <label>Password</label>
-            <input id="vs-pass" type="password" placeholder="Choose a password" />
-            <label>Staff PIN (4 digits)</label>
+            <input id="vs-pass" type="password" />
+            <label>Staff PIN</label>
             <input id="vs-pin" placeholder="4821" />
-            <button class="btn" style="margin-top:12px" onclick="venueSignup()">Create venue</button>
+            <button class="btn" style="margin-top:12px" onclick="venueSignup()">Register venue</button>
           </div>
         </div>
-        <p class="muted" style="text-align:center;margin-top:10px">
-          <a href="#" onclick="toggleAdmin(); return false;">Staff admin</a>
-        </p>
+        <p class="muted" style="text-align:center;margin-top:10px"><a href="#" onclick="toggleAdmin(); return false;">Staff admin</a></p>
         <div id="admin-box" class="card hidden">
-          <div class="eyebrow">Ops</div>
           <h2>Admin</h2>
-          <label>User</label>
-          <input id="a-user" placeholder="admin" />
-          <label>Password</label>
-          <input id="a-pass" type="password" placeholder="spareseat" />
+          <label>User</label><input id="a-user" placeholder="admin" />
+          <label>Password</label><input id="a-pass" type="password" placeholder="spareseat" />
           <button class="btn" style="margin-top:12px" onclick="startAdmin()">Admin login</button>
         </div>
       </div>
