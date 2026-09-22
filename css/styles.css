@@ -2,7 +2,6 @@
   --bg: #0d1b2a;
   --bg-mid: #112236;
   --card: #16293f;
-  --card-alt: #1a3050;
   --gold: #c45c26;
   --gold-soft: #e07a3d;
   --teal: #4ec9b0;
@@ -57,3 +56,6 @@ table { width: 100%; border-collapse: collapse; font-size: 13px; }
 th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--line); color: var(--body); }
 th { color: var(--muted); font-weight: 600; }
 .tabs-user { font-size: 13px; color: var(--body); }
+#punter-map { width: 100%; border-radius: 12px; margin: 8px 0 14px; background: var(--bg-mid); }
+#punter-map.free { height: 280px; }
+#punter-map.plus { height: 460px; }
