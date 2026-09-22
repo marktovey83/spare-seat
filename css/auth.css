@@ -1,0 +1,16 @@
+.auth-wrap { max-width: 440px; margin: 22px 0 0; }
+.auth-switch { display: flex; gap: 8px; margin-bottom: 8px; }
+.auth-switch button {
+  flex: 1;
+  background: rgba(8,16,26,0.55);
+  color: var(--body);
+  border: 1px solid var(--line);
+  box-shadow: none;
+}
+.auth-switch button.active {
+  background: linear-gradient(135deg, #ff6a1a, #8b5cff);
+  color: #fff;
+  border-color: transparent;
+}
+.auth-switch.slim button { padding: 8px 12px; font-size: 13px; }
+.auth-card { margin-top: 4px; }
