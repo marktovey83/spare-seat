@@ -5,13 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Spare Seat</title>
   <link rel="icon" href="logo.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="css/styles.css" />
-  <link rel="stylesheet" href="css/auth.css" />
+  <link rel="stylesheet" href="css/styles.css?v=24" />
+  <link rel="stylesheet" href="css/auth.css?v=24" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
-    .logo-mark { width:36px;height:36px;border-radius:10px;box-shadow:0 0 18px rgba(255,106,26,.45);display:block; }
+    .logo-mark { width:36px;height:36px;border-radius:10px;display:block; }
     .logo-mark.big { width:88px;height:88px;border-radius:22px;margin:0 auto 12px;box-shadow:0 0 28px rgba(255,106,26,.55); }
+    .ss-back { display:block;width:100%;margin:0 0 10px;padding:12px 14px;background:#071018!important;color:#ff6a1a!important;border:1.5px solid #ff6a1a!important;border-radius:16px!important;font-family:"Bebas Neue",sans-serif!important;font-size:18px!important;letter-spacing:.08em;text-transform:uppercase;-webkit-appearance:none;appearance:none; }
+    .ss-switch { display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 12px; }
+    .ss-tab { -webkit-appearance:none;appearance:none;width:100%;padding:14px 12px;background:#071018!important;color:#fff8f0!important;border:1.5px solid #ff6a1a!important;border-radius:16px!important;font-family:"Bebas Neue",sans-serif!important;font-size:18px!important;letter-spacing:.08em;text-transform:uppercase; }
+    .ss-tab.on,.ss-tab.active { background:#ff6a1a!important;color:#071018!important; }
+    .auth-card .btn { width:100%;padding:14px 16px;border-radius:16px;background:#ff6a1a;color:#071018;border:0;font-family:"Bebas Neue",sans-serif;letter-spacing:.08em;text-transform:uppercase;font-size:18px; }
   </style>
 </head>
 <body class="gate-on">
@@ -36,10 +41,10 @@
         </div>
         <p class="muted" id="pick-hint" style="text-align:center">Pick User or Venue</p>
         <div id="auth-steps" class="hidden">
-          <button type="button" class="back-link" onclick="resetAuth()">&larr; Back</button>
-          <div class="auth-switch slim">
-            <button type="button" class="active" id="sw-login" onclick="setAuthMode('login')">Log in</button>
-            <button type="button" id="sw-signup" onclick="setAuthMode('signup')">Register</button>
+          <button type="button" class="ss-back" onclick="resetAuth()">&larr; Back</button>
+          <div class="ss-switch">
+            <button type="button" class="ss-tab on" id="sw-login" onclick="setAuthMode('login')">Log in</button>
+            <button type="button" class="ss-tab" id="sw-signup" onclick="setAuthMode('signup')">Register</button>
           </div>
           <div class="card auth-card">
             <div id="auth-user-login">
@@ -115,7 +120,7 @@
   </div>
   <script src="js/data.js"></script>
   <script src="js/app.js"></script>
-  <script src="js/auth.js"></script>
+  <script src="js/auth.js?v=24"></script>
   <script src="js/map.js"></script>
   <script src="js/tabs-fix.js"></script>
   <script src="js/lounge.js"></script>

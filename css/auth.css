@@ -3,128 +3,40 @@ body.gate-on .footer-help { text-align: center; }
 .gate-logo { text-align: center; padding: 36px 12px 8px; }
 .gate-word { font-family: "Bebas Neue", sans-serif; font-size: 48px; letter-spacing: 0.12em; }
 .auth-wrap { max-width: 420px; margin: 18px auto 0; }
-.auth-switch { display: flex; gap: 8px; margin-bottom: 8px; }
-.auth-switch button {
-  flex: 1;
-  background: #071018;
-  color: #fff8f0;
-  border: 1.5px solid #ff6a1a;
-  border-radius: 16px;
-  box-shadow: none;
-  font-family: "Bebas Neue", Manrope, sans-serif;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+.ss-back {
+  display: block; width: 100%; margin: 0 0 10px; padding: 12px 14px;
+  background: #071018 !important; color: #ff6a1a !important;
+  border: 1.5px solid #ff6a1a !important; border-radius: 16px !important;
+  font-family: "Bebas Neue", sans-serif !important; font-size: 18px !important;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  box-shadow: none !important; appearance: none; -webkit-appearance: none;
 }
-.auth-switch button.active {
-  background: #ff6a1a;
-  color: #071018;
-  border-color: #ff6a1a;
+.ss-switch { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 0 0 12px; }
+.ss-tab {
+  appearance: none; -webkit-appearance: none; width: 100%; padding: 14px 12px;
+  background: #071018 !important; color: #fff8f0 !important;
+  border: 1.5px solid #ff6a1a !important; border-radius: 16px !important;
+  font-family: "Bebas Neue", sans-serif !important; font-size: 18px !important;
+  letter-spacing: 0.08em; text-transform: uppercase; box-shadow: none !important;
 }
-.auth-switch.slim button { padding: 10px 14px; font-size: 16px; }
-.auth-card { margin-top: 4px; }
-.plan-pick { display: grid; gap: 8px; margin: 8px 0; }
-.plan { display: block; padding: 10px; border-radius: 16px; border: 1.5px solid #ff6a1a; background: #071018; font-size: 13px; color: #fff8f0; }
-.plan.plus { border-color: #ff6a1a; }
-.two-doors { display: flex; gap: 8px; margin: 8px 0 6px; }
+.ss-tab.on, .ss-tab.active { background: #ff6a1a !important; color: #071018 !important; }
 .door {
-  flex: 1;
-  padding: 14px 12px;
-  font-size: 18px;
-  font-family: "Bebas Neue", Manrope, sans-serif;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  background: #071018;
-  color: #fff8f0;
-  border: 1.5px solid #ff6a1a;
-  border-radius: 16px;
-  box-shadow: none;
+  flex: 1; padding: 14px 12px; font-size: 18px;
+  font-family: "Bebas Neue", sans-serif; letter-spacing: 0.08em; text-transform: uppercase;
+  background: #071018; color: #fff8f0; border: 1.5px solid #ff6a1a; border-radius: 16px;
 }
-.door:hover { background: #ff6a1a; color: #071018; }
-.ad-slot {
-  margin: 14px auto 0;
-  max-width: 420px;
-  min-height: 72px;
-  border-radius: 16px;
-  border: 1.5px dashed #ff6a1a;
-  background: #071018;
-  display: grid;
-  place-items: center;
-  text-align: center;
-  color: #8aa0b5;
-  font-size: 12px;
-}
-.back-link {
-  background: none;
-  border: 0;
-  color: #ff6a1a;
-  box-shadow: none;
-  padding: 0 0 10px;
-  font-family: "Bebas Neue", sans-serif;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-body.gate-on::before {
-  filter: saturate(1.2) brightness(1.05);
-  background:
-    linear-gradient(180deg, rgba(7,16,24,0.28) 0%, rgba(7,16,24,0.55) 55%, rgba(7,16,24,0.82) 100%),
-    url("https://commons.wikimedia.org/wiki/Special:FilePath/E37_Perth_Stadium_Open_Day_012.JPG") center 30% / cover no-repeat;
-}
-body.gate-on::after {
-  background: radial-gradient(700px 280px at 50% 0%, rgba(255,180,60,0.18), transparent 60%);
-}
-#punter-map.chat-map,
-#punter-map.chat-map.free,
-#punter-map.chat-map.plus { height: 168px; }
-#admin-map, .admin-map {
-  width: 100%;
-  height: 420px;
-  border-radius: 16px;
-  margin: 8px 0 16px;
-}
-.btn,
-#admin-box .btn,
-.auth-card .btn {
-  font-family: "Bebas Neue", Manrope, sans-serif;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  border-radius: 16px;
-  background: #ff6a1a;
-  color: #071018;
-  border: 0;
+.two-doors { display: flex; gap: 8px; margin: 8px 0 6px; }
+.auth-card .btn, #admin-box .btn {
+  width: 100%; padding: 14px 16px; font-size: 18px;
+  font-family: "Bebas Neue", sans-serif; letter-spacing: 0.08em; text-transform: uppercase;
+  border-radius: 16px; background: #ff6a1a; color: #071018; border: 0;
   box-shadow: 0 8px 22px rgba(255,106,26,0.38);
 }
-.btn.ghost,
-#btn-out {
-  background: #071018;
-  color: #fff8f0;
-  border: 1.5px solid #ff6a1a;
-  box-shadow: none;
-  font-family: "Bebas Neue", Manrope, sans-serif;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  border-radius: 16px;
-}
-.nav button {
-  font-family: "Bebas Neue", Manrope, sans-serif;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  border-radius: 16px;
-  background: #071018;
-  color: #fff8f0;
-  border: 1.5px solid #ff6a1a;
-  box-shadow: none;
-}
-.nav button.active {
-  background: #ff6a1a;
-  color: #071018;
-  border-color: #ff6a1a;
-}
-a[onclick*="toggleAdmin"] {
-  color: #ff6a1a;
-  font-family: "Bebas Neue", sans-serif;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  text-decoration: none;
-}
+.ad-slot { margin: 14px auto 0; max-width: 420px; min-height: 72px; border-radius: 16px; border: 1.5px dashed #ff6a1a; background: #071018; display: grid; place-items: center; color: #8aa0b5; font-size: 12px; }
+.nav button { font-family: "Bebas Neue", sans-serif; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 16px; background: #071018; color: #fff8f0; border: 1.5px solid #ff6a1a; box-shadow: none; }
+.nav button.active { background: #ff6a1a; color: #071018; }
+a[onclick*="toggleAdmin"] { color: #ff6a1a; font-family: "Bebas Neue", sans-serif; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; }
 .logo-mark { width: 36px; height: 36px; border-radius: 10px; }
 .logo-mark.big { width: 88px; height: 88px; border-radius: 22px; margin: 0 auto 12px; box-shadow: 0 0 28px rgba(255,106,26,0.55); }
+#admin-map, .admin-map { width: 100%; height: 420px; border-radius: 16px; margin: 8px 0 16px; }
+#punter-map.chat-map, #punter-map.chat-map.free, #punter-map.chat-map.plus { height: 168px; }
