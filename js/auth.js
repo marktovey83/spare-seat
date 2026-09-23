@@ -23,11 +23,11 @@ function paintAuth() {
   show('auth-user-signup', AUTH.role === 'user' && AUTH.mode === 'signup');
   show('auth-venue-login', AUTH.role === 'venue' && AUTH.mode === 'login');
   show('auth-venue-signup', AUTH.role === 'venue' && AUTH.mode === 'signup');
+  show('auth-admin-login', AUTH.role === 'admin');
+  const sw = document.querySelector('.ss-switch');
+  if (sw) sw.classList.toggle('hidden', AUTH.role === 'admin');
 }
-function toggleAdmin() {
-  const el = document.getElementById('admin-box');
-  if (el) el.classList.toggle('hidden');
-}
+function toggleAdmin() {}
 function findUser(id) {
   const q = (id || '').trim().toLowerCase();
   return S.users.find(function (u) {
@@ -54,15 +54,13 @@ function userSignup() {
   const planEl = document.querySelector('input[name="u-plan"]:checked');
   const user = {
     id: 'u' + Date.now(), name: name, email: email, pass: pass,
-    suburb: document.getElementById('p-sub').value,
-    sports: [sport], clubs: clubs,
+    suburb: document.getElementById('p-sub').value, sports: [sport], clubs: clubs,
     plus: !!(planEl && planEl.value === 'plus'),
     ageBand: document.getElementById('p-age').value, showUp: [0, 0], role: 'user'
   };
   S.users.push(user);
   if (user.plus) S.plus[user.id] = true;
   store.save(S);
-  toast(user.plus ? 'Plus account on (demo, no card charged)' : 'Free account created');
   setSession(user);
 }
 function venueLogin() {
@@ -77,23 +75,15 @@ function venueLogin() {
 }
 function venueSignup() {
   const name = document.getElementById('vs-name').value.trim();
-  const email = document.getElementById('vs-email').value.trim();
   const pass = document.getElementById('vs-pass').value;
   const pin = (document.getElementById('vs-pin').value.trim() || '4821');
   const sub = document.getElementById('vs-sub').value;
   if (!name || !pass) { toast('Venue name and password needed'); return; }
   const here = suburb(sub);
-  const v = {
-    id: 'v' + Date.now(), name: name, suburb: sub,
-    lat: here.lat + 0.002, lng: here.lng + 0.002,
-    showing: SEED.fixtures.map(function (f) { return f.id; }).slice(0, 2),
-    deal: 'Spare Seat table', seats: 8, pin: pin
-  };
+  const v = { id: 'v' + Date.now(), name: name, suburb: sub, lat: here.lat + 0.002, lng: here.lng + 0.002, showing: SEED.fixtures.map(function (f) { return f.id; }).slice(0, 2), deal: 'Spare Seat table', seats: 8, pin: pin };
   SEED.venues.push(v);
   S.venueAccounts = S.venueAccounts || {};
-  S.venueAccounts[v.id] = { email: email, pass: pass, pin: pin, name: name };
-  store.save(S);
-  fillSelects();
-  toast('Venue listed');
+  S.venueAccounts[v.id] = { pass: pass, pin: pin, name: name };
+  store.save(S); fillSelects();
   setSession({ role: 'venue', venueId: v.id, venueName: v.name });
 }
