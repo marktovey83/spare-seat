@@ -19,20 +19,15 @@
     var u = me();
     if (!u) return [];
     var ids = {};
-    Object.values(S.here || {}).forEach(function (h) {
-      if (h.userId === u.id) {
-        Object.values(S.here || {}).forEach(function (o) {
-          if (o.userId !== u.id && o.venueId === h.venueId && o.fixtureId === h.fixtureId) ids[o.userId] = o;
+    function pair(bucket) {
+      Object.values(bucket || {}).forEach(function (h) {
+        if (h.userId !== u.id) return;
+        Object.values(bucket || {}).forEach(function (o) {
+          if (o.userId !== u.id && o.venueId === h.venueId && o.fixtureId === h.fixtureId) ids[o.userId] = true;
         });
-      }
-    });
-    Object.values(S.heading || {}).forEach(function (h) {
-      if (h.userId === u.id) {
-        Object.values(S.heading || {}).forEach(function (o) {
-          if (o.userId !== u.id && o.venueId === h.venueId && o.fixtureId === h.fixtureId) ids[o.userId] = ids[o.userId] || o;
-        });
-      }
-    });
+      });
+    }
+    pair(S.here); pair(S.heading);
     var list = Object.keys(ids).map(function (id) { return S.users.find(function (x) { return x.id === id; }); }).filter(Boolean);
     if (!list.length) list = (S.users || []).filter(function (x) { return x.id !== u.id; }).slice(0, 4);
     return list;
@@ -42,11 +37,10 @@
     if (typeof prevMe === 'function') prevMe();
     var main = document.getElementById('main');
     if (!main) return;
-    var people = met();
     var box = document.createElement('div');
     box.className = 'card';
-    box.innerHTML = '<h3>Rate the table</h3><p class="muted">After the siren. Stars are for showed up and respectful \u2014 same idea as Uber. Not for who won.</p>' +
-      people.map(function (p) {
+    box.innerHTML = '<h3>Rate the table</h3><p class="muted">After the siren. Stars = showed up and respectful. Not who won.</p>' +
+      met().map(function (p) {
         var a = avg(p.id);
         return '<div class="item"><h3>' + p.name + '</h3><p class="muted">' + (a ? stars(a.score) + ' ' + a.score : 'No rating yet') + '</p><div class="row">' +
           [1,2,3,4,5].map(function (n) { return '<button class="btn ghost" onclick="rateStars(\'' + p.id + '\',' + n + ')">' + n + '\u2605</button>'; }).join('') +
@@ -56,8 +50,7 @@
   };
   window.rateStars = function (id, score) {
     S.ratings = S.ratings || { venues: {}, people: {} };
-    S.ratings.people[id] = S.ratings.people[id] || [];
-    S.ratings.people[id] = S.ratings.people[id].filter(function (r) { return r.user !== (me() || {}).name; });
+    S.ratings.people[id] = (S.ratings.people[id] || []).filter(function (r) { return r.user !== (me() || {}).name; });
     S.ratings.people[id].push({ user: (me() || {}).name, score: score, at: Date.now() });
     store.save(S);
     toast('Rated ' + score + ' stars');
@@ -72,11 +65,14 @@
     store.save(S);
     toast('Report sent to admin');
   };
-  var prevMap = window.showFriendsMap;
-  window.showFriendsMap = function (focusId) {
-    if (typeof prevMap === 'function') prevMap(focusId);
-    setTimeout(function () {
-      document.querySelectorAll('.leaflet-popup-content').forEach(function () {});
-    }, 400);
+  var prevF = window.renderFriends;
+  window.renderFriends = function () {
+    if (typeof prevF === 'function') prevF();
+    var main = document.getElementById('main');
+    if (!main) return;
+    (S.users || []).forEach(function (u) {
+      if (!main.innerHTML || main.innerHTML.indexOf(u.name) < 0) return;
+      main.innerHTML = main.innerHTML.replace(u.name + '</h3>', u.name + '</h3><p class="muted">' + personStars(u.id) + '</p>');
+    });
   };
 })();
