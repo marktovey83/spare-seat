@@ -1,47 +1,52 @@
 (function () {
+  function addNavLogout(nav) {
+    if (!nav) return;
+    var b = document.getElementById('nav-logout');
+    if (!b) {
+      b = document.createElement('button');
+      b.id = 'nav-logout';
+      b.className = 'btn';
+      b.textContent = 'Log out';
+      b.onclick = function () { if (typeof logout === 'function') logout(); };
+    }
+    nav.appendChild(b);
+    b.style.display = 'inline-flex';
+  }
   function paintChrome() {
-    var bar = document.getElementById('topbar');
-    if (!bar) return;
     var sess = window.S && S.session;
-    if (!sess) { bar.style.display = ''; return; }
-    document.body.classList.remove('gate-on');
-    bar.style.display = 'flex';
-    var who = document.getElementById('who');
-    if (who) who.textContent = sess.role === 'admin' ? 'Admin' : sess.role === 'venue' ? (sess.venueName || 'Venue') : ((sess.name || 'User') + (typeof isPlus === 'function' && isPlus() ? ' \u00b7 Plus' : ''));
-    var acct = document.getElementById('btn-account');
-    if (!acct) {
-      acct = document.createElement('button');
-      acct.id = 'btn-account';
-      acct.className = 'btn ghost';
-      acct.textContent = 'Account';
-      bar.appendChild(acct);
+    var app = document.getElementById('view-app');
+    var inApp = app && !app.classList.contains('hidden');
+    if (sess || inApp) {
+      document.body.classList.add('ss-in');
+      document.body.classList.remove('gate-on');
     }
-    acct.onclick = openAccount;
-    acct.style.display = sess.role === 'admin' ? 'none' : 'inline-flex';
+    addNavLogout(document.getElementById('nav-punter'));
+    addNavLogout(document.getElementById('nav-venue'));
+    addNavLogout(document.getElementById('nav-admin'));
+    var bar = document.getElementById('topbar');
     var out = document.getElementById('btn-out');
-    if (!out) {
-      out = document.createElement('button');
-      out.id = 'btn-out';
-      out.className = 'btn';
-      bar.appendChild(out);
+    if (bar && (sess || inApp)) bar.style.display = 'flex';
+    if (out) {
+      out.textContent = 'Log out';
+      out.onclick = function () { if (typeof logout === 'function') logout(); };
+      out.style.display = 'inline-flex';
     }
-    out.textContent = 'Log out';
-    out.className = 'btn';
-    out.style.display = 'inline-flex';
-    out.onclick = function () { if (typeof logout === 'function') logout(); };
   }
   window.openAccount = function () {
     var sess = S.session;
     if (!sess) return;
-    if (sess.role === 'venue') return showVenueAccount();
+    if (sess.role === 'venue' && typeof showVenueAccount === 'function') return showVenueAccount();
+    if (sess.role === 'venue' && typeof showVenue === 'function') return showVenue('offer');
     if (typeof showPunter === 'function') showPunter('me');
-  };
-  window.showVenueAccount = window.showVenueAccount || function () {
-    if (typeof showVenue === 'function') showVenue('offer');
   };
   var prevRoute = window.route;
   window.route = function () { if (typeof prevRoute === 'function') prevRoute(); paintChrome(); };
+  var prevP = window.showPunter;
+  window.showPunter = function (tab) {
+    if (typeof prevP === 'function') prevP(tab);
+    paintChrome();
+  };
   document.addEventListener('DOMContentLoaded', paintChrome);
   setTimeout(paintChrome, 200);
-  setTimeout(paintChrome, 800);
+  setTimeout(paintChrome, 1000);
 })();
