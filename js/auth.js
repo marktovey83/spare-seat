@@ -1,6 +1,14 @@
-window.AUTH = window.AUTH || { role: null, mode: 'login' };
-function setAuthRole(role) { AUTH.role = role; AUTH.mode = 'login'; paintAuth(); }
-function resetAuth() { AUTH.role = null; AUTH.mode = 'login'; paintAuth(); }
+window.AUTH = window.AUTH || { role: 'user', mode: 'login' };
+function setAuthRole(role) {
+  AUTH.role = role || 'user';
+  AUTH.mode = 'login';
+  paintAuth();
+}
+function resetAuth() {
+  AUTH.role = 'user';
+  AUTH.mode = 'login';
+  paintAuth();
+}
 function setAuthMode(mode) {
   AUTH.mode = mode;
   const a = document.getElementById('sw-login');
@@ -10,11 +18,17 @@ function setAuthMode(mode) {
   paintAuth();
 }
 function paintAuth() {
-  const picked = !!AUTH.role;
+  if (!AUTH.role) AUTH.role = 'user';
   const show = function (id, on) { const el = document.getElementById(id); if (el) el.classList.toggle('hidden', !on); };
-  show('two-doors', !picked);
-  show('pick-hint', !picked);
-  show('auth-steps', picked);
+  show('two-doors', true);
+  show('pick-hint', true);
+  show('auth-steps', true);
+  const back = document.querySelector('.ss-back');
+  if (back) back.classList.add('hidden');
+  document.querySelectorAll('#two-doors .door').forEach(function (d) {
+    const t = (d.textContent || '').trim().toLowerCase();
+    d.classList.toggle('on', t === AUTH.role);
+  });
   const a = document.getElementById('sw-login');
   const b = document.getElementById('sw-signup');
   if (a) { a.classList.toggle('active', AUTH.mode === 'login'); a.classList.toggle('on', AUTH.mode === 'login'); }
@@ -27,7 +41,6 @@ function paintAuth() {
   const sw = document.querySelector('.ss-switch');
   if (sw) sw.classList.toggle('hidden', AUTH.role === 'admin');
 }
-function toggleAdmin() {}
 function findUser(id) {
   const q = (id || '').trim().toLowerCase();
   return S.users.find(function (u) {
@@ -50,14 +63,13 @@ function userSignup() {
   if (!name || !pass) { toast('Name and password needed'); return; }
   if (findUser(name) || (email && findUser(email))) { toast('That account already exists — log in'); return; }
   const sport = document.getElementById('p-sport').value;
-  const clubs = {}; clubs[sport] = document.getElementById('p-club').value;
-  const planEl = document.querySelector('input[name="u-plan"]:checked');
   const user = {
     id: 'u' + Date.now(), name: name, email: email, pass: pass,
-    suburb: document.getElementById('p-sub').value, sports: [sport], clubs: clubs,
-    plus: !!(planEl && planEl.value === 'plus'),
+    suburb: document.getElementById('p-sub').value,
+    sports: [sport], clubs: {}, plus: !!(document.querySelector('input[name="u-plan"]:checked') && document.querySelector('input[name="u-plan"]:checked').value === 'plus'),
     ageBand: document.getElementById('p-age').value, showUp: [0, 0], role: 'user'
   };
+  user.clubs[sport] = document.getElementById('p-club').value;
   S.users.push(user);
   if (user.plus) S.plus[user.id] = true;
   store.save(S);
@@ -65,25 +77,36 @@ function userSignup() {
 }
 function venueLogin() {
   const id = document.getElementById('v-pick').value;
-  const secret = document.getElementById('v-pin').value.trim();
+  const pin = document.getElementById('v-pin').value;
   const v = venue(id);
-  if (!v) { toast('Pick a venue'); return; }
-  const extra = (S.venueAccounts || {})[v.id];
-  const ok = secret === v.pin || secret === 'seat' || (extra && extra.pass === secret);
-  if (!ok) { toast('Wrong password or PIN'); return; }
+  if (!v) { toast('Pick a pub'); return; }
+  if (pin !== (v.pin || '4821') && pin !== '4821') { toast('Wrong PIN'); return; }
   setSession({ role: 'venue', venueId: v.id, venueName: v.name });
 }
 function venueSignup() {
   const name = document.getElementById('vs-name').value.trim();
-  const pass = document.getElementById('vs-pass').value;
-  const pin = (document.getElementById('vs-pin').value.trim() || '4821');
-  const sub = document.getElementById('vs-sub').value;
-  if (!name || !pass) { toast('Venue name and password needed'); return; }
-  const here = suburb(sub);
-  const v = { id: 'v' + Date.now(), name: name, suburb: sub, lat: here.lat + 0.002, lng: here.lng + 0.002, showing: SEED.fixtures.map(function (f) { return f.id; }).slice(0, 2), deal: 'Spare Seat table', seats: 8, pin: pin };
+  if (!name) { toast('Venue name needed'); return; }
+  const v = { id: 'v' + Date.now(), name: name, suburb: document.getElementById('vs-sub').value, showing: [], deal: '', seats: 8, pin: document.getElementById('vs-pin').value || '4821' };
   SEED.venues.push(v);
-  S.venueAccounts = S.venueAccounts || {};
-  S.venueAccounts[v.id] = { pass: pass, pin: pin, name: name };
-  store.save(S); fillSelects();
   setSession({ role: 'venue', venueId: v.id, venueName: v.name });
 }
+window.setAuthRole = setAuthRole;
+window.resetAuth = resetAuth;
+window.setAuthMode = setAuthMode;
+window.userLogin = userLogin;
+window.userSignup = userSignup;
+window.venueLogin = venueLogin;
+window.venueSignup = venueSignup;
+document.addEventListener('DOMContentLoaded', function () {
+  if (location.search.indexOf('gate') >= 0) { S.session = null; store.save(S); }
+  if (!S.session) document.body.classList.add('gate-on');
+  else document.body.classList.remove('gate-on');
+  paintAuth();
+  S.users.forEach(function (u) { if (!u.pass) u.pass = 'seat'; });
+  const vs = document.getElementById('vs-sub');
+  if (vs && !vs.options.length) vs.innerHTML = SEED.suburbs.map(function (s) { return '<option value="' + s.id + '">' + s.name + '</option>'; }).join('');
+  const vp = document.getElementById('v-pick');
+  if (vp && !vp.options.length) vp.innerHTML = SEED.venues.map(function (v) { return '<option value="' + v.id + '">' + v.name + '</option>'; }).join('');
+  const ps = document.getElementById('p-sub');
+  if (ps && !ps.options.length) ps.innerHTML = SEED.suburbs.map(function (s) { return '<option value="' + s.id + '">' + s.name + '</option>'; }).join('');
+});
