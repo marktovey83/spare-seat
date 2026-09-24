@@ -1,0 +1,1 @@
+body:not(.gate-on) #topbar{display:flex!important;flex-wrap:wrap;position:sticky;top:8px;z-index:40}#btn-out{display:inline-flex!important;margin-left:auto;background:#ff6a1a!important;color:#071018!important;border:0!important;min-width:88px}#btn-account{display:inline-flex}.topbar .brand{flex:1 1 auto}

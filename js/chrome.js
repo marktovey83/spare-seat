@@ -3,20 +3,32 @@
     var bar = document.getElementById('topbar');
     if (!bar) return;
     var sess = window.S && S.session;
-    if (!sess) return;
-    var who = document.getElementById('who');
-    if (!who) { who = document.createElement('div'); who.id = 'who'; who.className = 'tabs-user'; bar.appendChild(who); }
-    who.textContent = sess.role === 'admin' ? 'Admin' : sess.role === 'venue' ? (sess.venueName || 'Venue') : ((sess.name || 'User') + (typeof isPlus === 'function' && isPlus() ? ' \u00b7 Plus' : ''));
-    var acct = document.getElementById('btn-account');
-    if (!acct) { acct = document.createElement('button'); acct.id = 'btn-account'; acct.className = 'btn ghost'; acct.textContent = 'Account'; bar.appendChild(acct); }
-    acct.onclick = openAccount;
-    acct.classList.toggle('hidden', sess.role === 'admin');
-    var out = document.getElementById('btn-out');
-    if (!out) { out = document.createElement('button'); out.id = 'btn-out'; out.className = 'btn ghost'; bar.appendChild(out); }
-    out.textContent = 'Log out';
-    out.onclick = function () { if (typeof logout === 'function') logout(); };
-    out.classList.remove('hidden');
+    if (!sess) { bar.style.display = ''; return; }
+    document.body.classList.remove('gate-on');
     bar.style.display = 'flex';
+    var who = document.getElementById('who');
+    if (who) who.textContent = sess.role === 'admin' ? 'Admin' : sess.role === 'venue' ? (sess.venueName || 'Venue') : ((sess.name || 'User') + (typeof isPlus === 'function' && isPlus() ? ' \u00b7 Plus' : ''));
+    var acct = document.getElementById('btn-account');
+    if (!acct) {
+      acct = document.createElement('button');
+      acct.id = 'btn-account';
+      acct.className = 'btn ghost';
+      acct.textContent = 'Account';
+      bar.appendChild(acct);
+    }
+    acct.onclick = openAccount;
+    acct.style.display = sess.role === 'admin' ? 'none' : 'inline-flex';
+    var out = document.getElementById('btn-out');
+    if (!out) {
+      out = document.createElement('button');
+      out.id = 'btn-out';
+      out.className = 'btn';
+      bar.appendChild(out);
+    }
+    out.textContent = 'Log out';
+    out.className = 'btn';
+    out.style.display = 'inline-flex';
+    out.onclick = function () { if (typeof logout === 'function') logout(); };
   }
   window.openAccount = function () {
     var sess = S.session;
@@ -24,39 +36,12 @@
     if (sess.role === 'venue') return showVenueAccount();
     if (typeof showPunter === 'function') showPunter('me');
   };
-  window.showVenueAccount = function () {
-    var sess = S.session;
-    var v = typeof venue === 'function' ? venue(sess.venueId) : null;
-    var extra = (S.venueAccounts && S.venueAccounts[sess.venueId]) || {};
-    var main = document.getElementById('main');
-    if (!main) return;
-    var navV = document.getElementById('nav-venue');
-    if (navV) [].slice.call(navV.querySelectorAll('button')).forEach(function (b) { b.classList.remove('active'); });
-    main.innerHTML = '<div class="eyebrow">Venue account</div><h2>' + ((v && v.name) || sess.venueName || 'Venue') + '</h2><div class="card"><p class="muted">This is the pub login, not the floor board.</p><label>Venue name</label><input id="va-name" value="' + (((v && v.name) || '').replace(/"/g, '&quot;')) + '" /><label>Email</label><input id="va-email" value="' + ((extra.email || sess.email || '').replace(/"/g, '&quot;')) + '" /><label>Suburb</label><input id="va-sub" value="' + ((v && v.suburb) || '') + '" /><label>Staff PIN</label><input id="va-pin" value="' + ((v && v.pin) || extra.pin || '4821') + '" /><label>New password</label><input id="va-pass" type="password" placeholder="Leave blank to keep" /><p class="body" style="margin-top:12px">Reach ' + (extra.reach || (v && v.reach) ? 'on \u00b7 $49/mo' : 'off') + ' \u00b7 Insights ' + (extra.insights || (v && v.insights) ? 'on \u00b7 $29/mo' : 'off') + '</p><div class="row" style="margin-top:12px"><button class="btn" onclick="saveVenueAccount()">Save account</button><button class="btn ghost" onclick="logout()">Log out</button></div></div>';
-  };
-  window.saveVenueAccount = function () {
-    var sess = S.session;
-    if (!sess || sess.role !== 'venue') return;
-    S.venueAccounts = S.venueAccounts || {};
-    var row = S.venueAccounts[sess.venueId] || {};
-    row.email = (document.getElementById('va-email') || {}).value;
-    row.pin = (document.getElementById('va-pin') || {}).value;
-    var pass = (document.getElementById('va-pass') || {}).value;
-    if (pass) row.pass = pass;
-    S.venueAccounts[sess.venueId] = row;
-    var v = typeof venue === 'function' ? venue(sess.venueId) : null;
-    if (v) {
-      v.name = (document.getElementById('va-name') || {}).value || v.name;
-      v.suburb = (document.getElementById('va-sub') || {}).value || v.suburb;
-      v.pin = row.pin;
-      sess.venueName = v.name;
-    }
-    store.save(S);
-    toast('Venue account saved');
-    paintChrome();
+  window.showVenueAccount = window.showVenueAccount || function () {
+    if (typeof showVenue === 'function') showVenue('offer');
   };
   var prevRoute = window.route;
   window.route = function () { if (typeof prevRoute === 'function') prevRoute(); paintChrome(); };
   document.addEventListener('DOMContentLoaded', paintChrome);
-  setTimeout(paintChrome, 300);
+  setTimeout(paintChrome, 200);
+  setTimeout(paintChrome, 800);
 })();
