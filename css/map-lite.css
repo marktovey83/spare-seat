@@ -1,0 +1,8 @@
+.chat-map,.chat-map.plus,.chat-map.free,#punter-map{height:176px!important;border-radius:16px;border:1px solid #e6e0d6;background:#f4f1ea;overflow:hidden}
+.watch-list{margin-top:10px;background:#fff;border-radius:16px;padding:8px 12px;color:#071018}
+.watch-list .item{border-bottom:1px solid #eee;padding:10px 0}
+.watch-list .item:last-child{border:0}
+.watch-list h3{color:#071018;margin:0}
+.leaflet-container{background:#f4f1ea;font-family:Manrope,sans-serif}
+.pin-pop{min-width:140px}
+.pin-pop b{color:#071018}
