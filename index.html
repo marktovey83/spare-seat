@@ -5,18 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Spare Seat</title>
   <link rel="icon" href="logo.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="css/styles.css?v=26" />
-  <link rel="stylesheet" href="css/auth.css?v=26" />
+  <link rel="stylesheet" href="css/styles.css?v=27" />
+  <link rel="stylesheet" href="css/auth.css?v=27" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
     .logo-mark { width:36px;height:36px;border-radius:10px;display:block; }
     .logo-mark.big { width:88px;height:88px;border-radius:22px;margin:0 auto 12px;box-shadow:0 0 28px rgba(255,106,26,.55); }
-    .ss-back { display:block;width:100%;margin:0 0 10px;padding:12px 14px;background:#071018!important;color:#ff6a1a!important;border:1.5px solid #ff6a1a!important;border-radius:16px!important;font-family:"Bebas Neue",sans-serif!important;font-size:18px!important;letter-spacing:.08em;text-transform:uppercase;-webkit-appearance:none; }
+    .ss-back,.ss-tab,.door,.auth-card .btn { font-family:"Bebas Neue",sans-serif;letter-spacing:.08em;text-transform:uppercase;border-radius:16px; }
+    .ss-back { display:block;width:100%;margin:0 0 10px;padding:12px 14px;background:#071018!important;color:#ff6a1a!important;border:1.5px solid #ff6a1a!important; }
     .ss-switch { display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 12px; }
-    .ss-tab { -webkit-appearance:none;width:100%;padding:14px 12px;background:#071018!important;color:#fff8f0!important;border:1.5px solid #ff6a1a!important;border-radius:16px!important;font-family:"Bebas Neue",sans-serif!important;font-size:18px!important;letter-spacing:.08em;text-transform:uppercase; }
+    .ss-tab { width:100%;padding:14px 12px;background:#071018!important;color:#fff8f0!important;border:1.5px solid #ff6a1a!important; }
     .ss-tab.on,.ss-tab.active { background:#ff6a1a!important;color:#071018!important; }
-    .auth-card .btn { width:100%;padding:14px 16px;border-radius:16px;background:#ff6a1a;color:#071018;border:0;font-family:"Bebas Neue",sans-serif;letter-spacing:.08em;text-transform:uppercase;font-size:18px; }
+    .auth-card .btn { width:100%;padding:14px 16px;background:#ff6a1a;color:#071018;border:0; }
     .two-doors { display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px; }
   </style>
 </head>
@@ -52,7 +53,7 @@
             <div id="auth-user-login">
               <h2>User login</h2>
               <label>Name or email</label><input id="u-login-id" placeholder="Dave" />
-              <label>Password</label><input id="u-login-pass" type="password" placeholder="Password" />
+              <label>Password</label><input id="u-login-pass" type="password" />
               <p class="muted">Demo: Dave / seat</p>
               <button class="btn" style="margin-top:12px" onclick="userLogin()">Log in</button>
             </div>
@@ -65,9 +66,8 @@
               <label>Sport</label><select id="p-sport"></select>
               <label>Club</label><select id="p-club"></select>
               <label>Age</label><select id="p-age"><option>30-44</option><option>18-29</option><option>45+</option></select>
-              <label>Plan</label>
               <div class="plan-pick">
-                <label class="plan"><input type="radio" name="u-plan" value="free" checked /> <b>Free</b> — 10 km</label>
+                <label class="plan"><input type="radio" name="u-plan" value="free" checked /> <b>Free</b></label>
                 <label class="plan plus"><input type="radio" name="u-plan" value="plus" /> <b>Plus $15/mo</b></label>
               </div>
               <button class="btn" style="margin-top:12px" onclick="userSignup()">Register</button>
@@ -92,7 +92,6 @@
               <h2>Admin login</h2>
               <label>User</label><input id="a-user" placeholder="admin" />
               <label>Password</label><input id="a-pass" type="password" placeholder="spareseat" />
-              <p class="muted">Venues, 10 km rules, and who is in each area.</p>
               <button class="btn" style="margin-top:12px" onclick="startAdmin()">Log in</button>
             </div>
           </div>
@@ -120,7 +119,7 @@
   </div>
   <script src="js/data.js"></script>
   <script src="js/app.js"></script>
-  <script src="js/auth.js?v=26"></script>
+  <script src="js/auth.js?v=27"></script>
   <script src="js/map.js"></script>
   <script src="js/tabs-fix.js"></script>
   <script src="js/lounge.js"></script>
@@ -128,5 +127,6 @@
   <script src="js/today-venues.js"></script>
   <script src="js/admin-dash.js"></script>
   <script src="js/venue-dash.js"></script>
+  <script src="js/venue-games.js"></script>
 </body>
 </html>
