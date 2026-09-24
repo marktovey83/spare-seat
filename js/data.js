@@ -20,10 +20,13 @@ window.SEED = {
   sports: ['AFL', 'NRL', 'Cricket', 'NFL', 'NBA', 'A-League'],
   clubs: { AFL: ['Dockers', 'Eagles', 'Cats', 'Lions', 'Crows', 'Neutral'], NRL: ['Storm', 'Panthers', 'Broncos', 'Neutral'], Cricket: ['Scorchers', 'Sixers', 'Heat', 'Neutral'], NFL: ['49ers', 'Chiefs', 'Neutral'], NBA: ['Lakers', 'Celtics', 'Neutral'], 'A-League': ['Glory', 'Victory', 'Neutral'] },
   fixtures: [
-    { id: 'f1', sport: 'AFL', home: 'Fremantle', away: 'Geelong', label: 'Dockers vs Cats', venue: 'Optus Stadium', start: 'Tonight 6:10pm AWST' },
-    { id: 'f2', sport: 'NRL', home: 'Panthers', away: 'Roosters', label: 'Panthers vs Roosters', venue: 'CommBank', start: 'Sunday 2:05pm AWST' },
-    { id: 'f3', sport: 'Cricket', home: 'Australia', away: 'South Africa', label: 'Aus vs SA ODI', venue: 'Away', start: 'Tonight late' },
-    { id: 'f4', sport: 'NFL', home: '49ers', away: 'Rams', label: '49ers vs Rams', venue: 'US / replay pubs', start: 'Monday 10:00am AWST' }
+    { id: 'f1', sport: 'AFL', home: 'Fremantle', away: 'Geelong', label: 'Dockers vs Cats', venue: 'Optus Stadium', start: 'Tonight 6:10pm AWST', lounge: 'Lounge 4:40pm AWST' },
+    { id: 'f5', sport: 'AFL', home: 'West Coast', away: 'Brisbane', label: 'Eagles vs Lions', venue: 'Optus Stadium', start: 'Saturday 5:40pm AWST', lounge: 'Lounge 4:10pm AWST' },
+    { id: 'f2', sport: 'NRL', home: 'Panthers', away: 'Roosters', label: 'Panthers vs Roosters', venue: 'CommBank', start: 'Sunday 2:05pm AWST', lounge: 'Lounge 12:35pm AWST' },
+    { id: 'f3', sport: 'Cricket', home: 'Australia', away: 'South Africa', label: 'Aus vs SA ODI', venue: 'Away / pub screens', start: 'Tonight late', lounge: 'Lounge 90 min before' },
+    { id: 'f4', sport: 'NFL', home: '49ers', away: 'Rams', label: '49ers vs Rams', venue: 'US / replay pubs', start: 'Monday 10:00am AWST', lounge: 'Lounge 8:30am AWST' },
+    { id: 'f6', sport: 'NBA', home: 'Lakers', away: 'Celtics', label: 'Lakers vs Celtics', venue: 'Replay pubs', start: 'Friday 11:30am AWST', lounge: 'Lounge 10:00am AWST' },
+    { id: 'f7', sport: 'A-League', home: 'Perth Glory', away: 'Victory', label: 'Glory vs Victory', venue: 'HBF Park', start: 'Saturday 7:45pm AWST', lounge: 'Lounge 6:15pm AWST' }
   ],
   venues: [
     { id: 'v1', name: 'The Freo Hotel', suburb: 'freo', lat: -32.055, lng: 115.748, showing: ['f1', 'f4'], deal: 'Platter after 4 check-ins', seats: 8, pin: '4821', patch: 'perth-sw' },
