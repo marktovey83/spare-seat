@@ -1,7 +1,7 @@
 (function () {
   function ensureVenueTab() {
     const nav = document.getElementById('nav-punter');
-    if (!nav || document.getElementById('tab-venues')) return;
+    if (!nav || document.getElementById('tab-venues') || nav.querySelector('[data-tab="venues"]')) return;
     const btn = document.createElement('button');
     btn.className = 'btn'; btn.id = 'tab-venues'; btn.dataset.tab = 'venues'; btn.textContent = 'Venues';
     btn.onclick = function () { showPunter('venues'); };
@@ -32,11 +32,10 @@
     const shown = plus ? rows : rows.filter(function (r) { return r.dist <= cap; });
     let html = '<div class="eyebrow">Venues</div><h2>' + (plus ? 'All listed pubs' : 'Within ' + cap + ' km of ' + here.name) + '</h2><div class="list">';
     shown.forEach(function (row) {
-      const v = row.v; const games = (SEED.fixtures || []).filter(function (f) { return (v.showing || []).indexOf(f.id) >= 0; });
+      const v = row.v;
+      const games = (SEED.fixtures || []).filter(function (f) { return (v.showing || []).indexOf(f.id) >= 0; });
       const fid = (games[0] || SEED.fixtures[0]).id;
-      html += '<div class="item"><h3>' + v.name + '</h3><p class="muted">' + row.vs.name + ' \u00b7 ' + row.dist.toFixed(1) + ' km</p><p class="body">' + (v.deal || '') + '</p>';
-      games.forEach(function (f) { html += '<p class="muted">' + f.sport + ' \u00b7 ' + f.label + '</p>'; });
-      html += '<div class="row" style="margin-top:8px"><button class="btn ghost" onclick="openVenueCard(\'' + v.id + '\')">What\'s on</button><button class="btn ghost" onclick="headTo(\'' + v.id + '\',\'' + fid + '\')">I\'m heading here</button><button class="btn" onclick="checkIn(\'' + v.id + '\',\'' + fid + '\')">I\'m here</button></div></div>';
+      html += '<div class="item"><h3>' + v.name + '</h3><p class="muted">' + row.vs.name + ' \u00b7 ' + row.dist.toFixed(1) + ' km</p><p class="body">' + (v.deal || '') + '</p><div class="row" style="margin-top:8px"><button class="btn ghost" onclick="openVenueCard(\'' + v.id + '\')">What\'s on</button><button class="btn ghost" onclick="headTo(\'' + v.id + '\',\'' + fid + '\')">I\'m heading here</button><button class="btn" onclick="checkIn(\'' + v.id + '\',\'' + fid + '\')">I\'m here</button></div></div>';
     });
     html += '</div>';
     main.innerHTML = html;
@@ -46,11 +45,13 @@
     ensureVenueTab();
     if (tab === 'venues') {
       const nav = document.getElementById('nav-punter');
-      if (nav) { nav.classList.remove('hidden'); [].forEach.call(nav.querySelectorAll('button'), function (b) { b.classList.toggle('active', b.dataset.tab === 'venues'); }); }
+      if (nav) {
+        nav.classList.remove('hidden');
+        [].forEach.call(nav.querySelectorAll('button'), function (b) { b.classList.toggle('active', b.dataset.tab === 'venues'); });
+      }
       window.renderVenuesNear();
       return;
     }
     if (typeof prev === 'function') prev(tab);
   };
-  document.addEventListener('DOMContentLoaded', ensureVenueTab);
 })();
