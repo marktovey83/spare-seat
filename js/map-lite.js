@@ -7,17 +7,57 @@
     if (m) return m[1];
     return ((SEED.fixtures || [])[0] || {}).id;
   }
+  var PIN = {
+    Dockers: { e: '\u2693', bg: '#2b0a5c', fg: '#fff200' },
+    Cats: { e: '\uD83D\uDC31', bg: '#001f3f', fg: '#ffffff' },
+    Eagles: { e: '\uD83E\uDD85', bg: '#003087', fg: '#f2a900' },
+    Lions: { e: '\uD83E\uDD81', bg: '#a30046', fg: '#fdb813' },
+    Crows: { e: '\uD83D\uDC26', bg: '#002b5c', fg: '#e21937' },
+    Panthers: { e: '\uD83D\uDC06', bg: '#111', fg: '#c4a747' },
+    Roosters: { e: '\uD83D\uDC13', bg: '#e10600', fg: '#fff' },
+    Storm: { e: '\u26A1', bg: '#6b2d8b', fg: '#fdb813' },
+    Broncos: { e: '\uD83E\uDD81', bg: '#7b003c', fg: '#fdb813' },
+    Scorchers: { e: '\uD83D\uDD25', bg: '#ff6a1a', fg: '#071018' },
+    Sixers: { e: '\uD83C\uDFC6', bg: '#eb1c2d', fg: '#fff' },
+    Heat: { e: '\uD83D\uDD25', bg: '#7a0019', fg: '#fdb813' },
+    '49ers': { e: '\uD83C\uDFC8', bg: '#aa0000', fg: '#b3995d' },
+    Rams: { e: '\uD83D\uDC0F', bg: '#003594', fg: '#ffd100' },
+    Lakers: { e: '\uD83C\uDFC0', bg: '#552583', fg: '#fdb927' },
+    Celtics: { e: '\uD83C\uDFC0', bg: '#007a33', fg: '#ba9653' },
+    Glory: { e: '\u2B50', bg: '#6b2d8b', fg: '#fff' },
+    Victory: { e: '\u26BD', bg: '#1a1a1a', fg: '#b11a21' },
+    Australia: { e: '\uD83C\uDFCF', bg: '#00843d', fg: '#ffcd00' },
+    'South Africa': { e: '\uD83C\uDFCF', bg: '#007a4d', fg: '#ffb81c' },
+    Fremantle: { e: '\u2693', bg: '#2b0a5c', fg: '#fff200' },
+    Geelong: { e: '\uD83D\uDC31', bg: '#001f3f', fg: '#ffffff' }
+  };
+  function sideOf(u, fid) {
+    if (!u) return '';
+    if (window.S && S.sidePin && S.sidePin[u.id]) return S.sidePin[u.id];
+    var f = (SEED.fixtures || []).find(function (x) { return x.id === fid; });
+    var sport = (f && f.sport) || 'AFL';
+    if (u.clubs && u.clubs[sport]) return u.clubs[sport];
+    return '';
+  }
+  function pinFor(name) { return PIN[name] || { e: '\uD83D\uDC64', bg: '#ff6a1a', fg: '#071018' }; }
+  function clubIcon(name) {
+    var p = pinFor(name);
+    return L.divIcon({
+      className: 'club-pin',
+      html: '<div style="width:30px;height:30px;border-radius:50%;background:' + p.bg + ';color:' + p.fg + ';border:2px solid ' + p.fg + ';display:flex;align-items:center;justify-content:center;font-size:16px;line-height:1">' + p.e + '</div>',
+      iconSize: [30, 30],
+      iconAnchor: [15, 15]
+    });
+  }
   function watchingId(u) {
     if (!u) return null;
+    if (window.S && S.watching && S.watching[u.id]) return S.watching[u.id];
     if (u.watching) return u.watching;
-    if (S.watching && S.watching[u.id]) return S.watching[u.id];
-    var here = Object.values(S.here || {}).find(function (h) { return h.userId === u.id; });
+    var here = Object.values((S && S.here) || {}).find(function (h) { return h.userId === u.id; });
     if (here) return here.fixtureId;
-    var head = Object.values(S.heading || {}).find(function (h) { return h.userId === u.id; });
+    var head = Object.values((S && S.heading) || {}).find(function (h) { return h.userId === u.id; });
     if (head) return head.fixtureId;
-    var sport = (u.sports && u.sports[0]) || 'AFL';
-    var fx = (SEED.fixtures || []).find(function (x) { return x.sport === sport; });
-    return fx ? fx.id : null;
+    return null;
   }
   function watchers(fid) {
     var self = typeof me === 'function' ? me() : null;
@@ -63,7 +103,8 @@
     el._leaflet = map;
     L.tileLayer(LIGHT, { maxZoom: 18, attribution: '&copy; OSM \u00b7 Carto' }).addTo(map);
     if (!plus) L.circle([home.lat, home.lng], { radius: 10000, color: '#ff6a1a', fillColor: '#ff6a1a', fillOpacity: 0.12, weight: 2 }).addTo(map);
-    L.circleMarker([home.lat, home.lng], { radius: 10, color: '#fff', fillColor: '#ff6a1a', fillOpacity: 1, weight: 2 }).addTo(map).bindPopup('You');
+    var youSide = self ? sideOf(self, fid) : '';
+    L.marker([home.lat, home.lng], { icon: clubIcon(youSide) }).addTo(map).bindPopup('You' + (youSide ? '<br>' + youSide : ''));
     (SEED.venues || []).forEach(function (v) {
       if (!plus) {
         if (typeof km === 'function' && km(home, v) > 10) return;
@@ -72,8 +113,8 @@
     });
     list.forEach(function (u) {
       var s = suburb(u.suburb); if (!s) return;
-      L.circleMarker([s.lat, s.lng], { radius: 8, color: '#fff', fillColor: '#2b0a5c', fillOpacity: 1, weight: 2 })
-        .addTo(map).bindPopup(popHtml(u));
+      var side = sideOf(u, fid);
+      L.marker([s.lat, s.lng], { icon: clubIcon(side) }).addTo(map).bindPopup((side ? side + '<br>' : '') + popHtml(u));
     });
     var wrap = el.parentNode;
     var old = document.getElementById('watch-list');
