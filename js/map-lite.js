@@ -144,3 +144,11 @@
     }
   };
 })();
+
+(function seedWatch() {
+  (SEED.people || []).forEach(function (p) {
+    if (!p.watching) return;
+    var row = (S.users || []).find(function (u) { return u.id === p.id; });
+    if (row && !row.watching && !(S.watching && S.watching[row.id])) row.watching = p.watching;
+  });
+})();
