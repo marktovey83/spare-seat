@@ -41,8 +41,8 @@ window.SEED = {
   ],
   people: [
     { id: 'u1', name: 'Dave', suburb: 'freo', sports: ['AFL', 'NFL'], clubs: { AFL: 'Dockers', NFL: '49ers' }, plus: true, ageBand: '30-44', showUp: [11, 12] },
-    { id: 'u2', name: 'Sarah', suburb: 'south', sports: ['AFL'], clubs: { AFL: 'Cats' }, plus: false, ageBand: '30-44', showUp: [6, 7] },
-    { id: 'u3', name: 'Mick', suburb: 'cottesloe', sports: ['AFL', 'Cricket'], clubs: { AFL: 'Dockers', Cricket: 'Scorchers' }, plus: true, ageBand: '45+', showUp: [20, 21] },
+    { id: 'u2', name: 'Sarah', suburb: 'south', sports: ['AFL'], clubs: { AFL: 'Cats' }, watching: 'f1', plus: false, ageBand: '30-44', showUp: [6, 7] },
+    { id: 'u3', name: 'Mick', suburb: 'cottesloe', sports: ['AFL', 'Cricket'], clubs: { AFL: 'Dockers', Cricket: 'Scorchers' }, watching: 'f1', plus: true, ageBand: '45+', showUp: [20, 21] },
     { id: 'u4', name: 'Jess', suburb: 'perth', sports: ['AFL', 'NRL'], clubs: { AFL: 'Eagles', NRL: 'Storm' }, plus: false, ageBand: '18-29', showUp: [3, 4] },
     { id: 'u5', name: 'Tom', suburb: 'joondalup', sports: ['NFL', 'AFL'], clubs: { AFL: 'Dockers', NFL: '49ers' }, plus: true, ageBand: '30-44', showUp: [8, 9] }
   ]
