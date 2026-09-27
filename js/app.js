@@ -226,7 +226,7 @@ function openRoom(key, title) {
   const box = S.chats[key].map((m) => `<div class="msg"><b>${m.name}</b> ${m.text}</div>`).join("") || `<div class="msg muted">No messages yet. Talk about the game.</div>`;
   $("room").innerHTML = `<div class="card"><h3>${title}</h3>
     <div class="chat" id="chatbox">${box}</div>
-    <div class="row"><input id="chat-in" placeholder="Message (no stakes, no numbers first)" />
+    <div class="row"><input id="chat-in" placeholder="Message about the game" />
     <button class="btn" onclick="sendMsg('${key}')">Send</button></div></div>`;
 }
 
@@ -355,7 +355,7 @@ function showAdmin(tab) {
       const venues = SEED.venues.filter((v) => v.suburb === sub.id);
       const hereN = Object.values(S.here).filter((h) => venue(h.venueId).suburb === sub.id).length;
       html += `<div class="card"><h3>${sub.name}</h3>
-        <p class="stat">${users.length}</p><p class="muted">punters</p>
+        <p class="stat">${users.length}</p><p class="muted">users</p>
         <p class="body">${venues.map((v) => v.name).join(", ") || "No pin yet"}</p>
         <p class="muted">${hereN} checked in tonight</p></div>`;
     });
@@ -363,7 +363,7 @@ function showAdmin(tab) {
     $("main").innerHTML = html;
   }
   if (tab === "people") {
-    $("main").innerHTML = `<div class="eyebrow">Admin</div><h2>Punters</h2>
+    $("main").innerHTML = `<div class="eyebrow">Admin</div><h2>Users</h2>
       <table><thead><tr><th>Name</th><th>Area</th><th>Club</th><th>Plan</th></tr></thead><tbody>
       ${S.users.map((u) => `<tr><td>${u.name}</td><td>${suburb(u.suburb).name}</td><td>${u.clubs.AFL || "—"}</td><td>${u.plus || S.plus[u.id] ? "Plus" : "Free"}</td></tr>`).join("")}
       </tbody></table>`;
