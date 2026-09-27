@@ -14,9 +14,7 @@
     var head = Object.values(S.heading || {}).find(function (h) { return h.userId === u.id; });
     if (head) return head.fixtureId;
     if (S.watching && S.watching[u.id]) return S.watching[u.id];
-    var sport = (u.sports && u.sports[0]) || 'AFL';
-    var fx = (SEED.fixtures || []).find(function (x) { return x.sport === sport; });
-    return fx ? fx.id : null;
+    return null;
   }
   function watchers(fid) {
     var self = typeof me === 'function' ? me() : null;
@@ -76,11 +74,4 @@
     var el = document.getElementById('punter-map');
     if (el) drawGameWatchMap(el, fid);
   };
-  (S.users || []).forEach(function (u) {
-    if (!u.watching) {
-      var sport = (u.sports && u.sports[0]) || 'AFL';
-      var fx = (SEED.fixtures || []).find(function (x) { return x.sport === sport; });
-      if (fx) u.watching = fx.id;
-    }
-  });
 })();
