@@ -2,9 +2,9 @@
 
 Don't watch it alone.
 
-Spare Seat is a meetup app for watching the game with someone nearby — pubs, tables, check-in, shared jugs. Not sports betting. No stakes, wallets, or payouts.
+Spare Seat is a meetup app so you do not watch the game by yourself. Find a pub showing it, hold a seat, check in, and sit with other fans.
 
-Demo web app: tonight's fixtures, pub pins, held seats, check-in, shared table deals, ratings, Plus, venue door list, and an admin view of each area.
+Demo: today's fixtures, pub pins, held seats, check-in, shared table deals, ratings, Plus, venue door list, and an admin view of each area.
 
 ## Run it
 
@@ -18,4 +18,4 @@ Live demo: https://marktovey83.github.io/spare-seat/
 |---|---|
 | User | **User** → Log in as `Dave` / `seat` |
 | Venue | **Venue** → listed pub, PIN `4821` |
-| Admin | Staff admin → `admin` / `spareseat` |
+| Admin | **Admin** → `admin` / `spareseat` |
