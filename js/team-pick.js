@@ -19,11 +19,29 @@
   function remember(key, team) {
     window._side = window._side || {};
     window._side[key] = team;
-    if (window.S) {
-      S.loungeSide = S.loungeSide || {};
-      S.loungeSide[key] = team;
-      if (window.store) store.save(S);
+    if (!window.S) return;
+    S.loungeSide = S.loungeSide || {};
+    S.loungeSide[key] = team;
+    S.sidePin = S.sidePin || {};
+    S.watching = S.watching || {};
+    var u = typeof me === 'function' ? me() : null;
+    var f = fixtureFor(key);
+    if (u) {
+      S.sidePin[u.id] = team;
+      if (f) {
+        S.watching[u.id] = f.id;
+        u.watching = f.id;
+        u.clubs = u.clubs || {};
+        u.clubs[f.sport || 'AFL'] = team;
+      }
+      var row = (S.users || []).find(function (x) { return x.id === u.id; });
+      if (row && f) {
+        row.watching = f.id;
+        row.clubs = row.clubs || {};
+        row.clubs[f.sport || 'AFL'] = team;
+      }
     }
+    if (window.store) store.save(S);
   }
   function known(key) {
     if (window._side && window._side[key]) return window._side[key];
