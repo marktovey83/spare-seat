@@ -1,18 +1,21 @@
 (function () {
   function hideRibbonAccount() {
     var acct = document.getElementById('btn-account');
-    if (acct) {
-      acct.remove();
-    }
+    if (acct) acct.remove();
   }
   function paintChrome() {
     hideRibbonAccount();
     var sess = window.S && S.session;
     var app = document.getElementById('view-app');
+    var gate = document.getElementById('view-gate');
     var inApp = app && !app.classList.contains('hidden');
+    var onGate = gate && !gate.classList.contains('hidden') && !sess;
     if (sess || inApp) {
       document.body.classList.add('ss-in');
       document.body.classList.remove('gate-on');
+    } else {
+      document.body.classList.remove('ss-in');
+      document.body.classList.add('gate-on');
     }
     var bar = document.getElementById('topbar');
     var out = document.getElementById('btn-out');
@@ -20,11 +23,13 @@
     if (out) {
       out.textContent = 'Log out';
       out.onclick = function () { if (typeof logout === 'function') logout(); };
-      out.style.display = 'inline-flex';
+      out.style.display = (sess || inApp) && !onGate ? 'inline-flex' : 'none';
     }
+    var navOut = document.getElementById('nav-logout');
+    if (navOut) navOut.style.display = (sess || inApp) ? 'inline-flex' : 'none';
     var who = document.getElementById('who');
-    if (who && sess) {
-      who.textContent = sess.role === 'admin' ? 'Admin' : sess.role === 'venue' ? (sess.venueName || 'Venue') : ((sess.name || 'User') + (typeof isPlus === 'function' && isPlus() ? ' \u00b7 Plus' : ''));
+    if (who) {
+      who.textContent = !sess ? '' : sess.role === 'admin' ? 'Admin' : sess.role === 'venue' ? (sess.venueName || 'Venue') : ((sess.name || 'User') + (typeof isPlus === 'function' && isPlus() ? ' \u00b7 Plus' : ''));
     }
     ensureVenueMe();
   }
@@ -54,7 +59,7 @@
     if (!main) return;
     var navV = document.getElementById('nav-venue');
     if (navV) [].slice.call(navV.querySelectorAll('button')).forEach(function (b) { b.classList.toggle('active', b.dataset.tab === 'me'); });
-    main.innerHTML = '<div class="eyebrow">Venue \u00b7 Me</div><h2>' + ((v && v.name) || sess.venueName || 'Venue') + '</h2><div class="card"><p class="muted">Pub login details live here, not on the top bar.</p><label>Venue name</label><input id="va-name" value="' + (((v && v.name) || '').replace(/"/g, '&quot;')) + '" /><label>Email</label><input id="va-email" value="' + ((extra.email || sess.email || '').replace(/"/g, '&quot;')) + '" /><label>Suburb</label><input id="va-sub" value="' + ((v && v.suburb) || '') + '" /><label>Staff PIN</label><input id="va-pin" value="' + ((v && v.pin) || extra.pin || '4821') + '" /><label>New password</label><input id="va-pass" type="password" placeholder="Leave blank to keep" /><p class="body" style="margin-top:12px">Reach ' + (extra.reach || (v && v.reach) ? 'on \u00b7 $49/mo' : 'off') + ' \u00b7 Insights ' + (extra.insights || (v && v.insights) ? 'on \u00b7 $29/mo' : 'off') + '</p><div class="row" style="margin-top:12px"><button class="btn" onclick="saveVenueAccount()">Save</button><button class="btn ghost" onclick="logout()">Log out</button></div></div>';
+    main.innerHTML = '<div class="eyebrow">Venue \u00b7 Me</div><h2>' + ((v && v.name) || sess.venueName || 'Venue') + '</h2><div class="card"><p class="muted">Pub login details live here, not on the top bar.</p><label>Venue name</label><input id="va-name" value="' + (((v && v.name) || '').replace(/"/g, '"')) + '" /><label>Email</label><input id="va-email" value="' + ((extra.email || sess.email || '').replace(/"/g, '"')) + '" /><label>Suburb</label><input id="va-sub" value="' + ((v && v.suburb) || '') + '" /><label>Staff PIN</label><input id="va-pin" value="' + ((v && v.pin) || extra.pin || '4821') + '" /><label>New password</label><input id="va-pass" type="password" placeholder="Leave blank to keep" /><p class="body" style="margin-top:12px">Reach ' + (extra.reach || (v && v.reach) ? 'on \u00b7 $49/mo' : 'off') + ' \u00b7 Insights ' + (extra.insights || (v && v.insights) ? 'on \u00b7 $29/mo' : 'off') + '</p><div class="row" style="margin-top:12px"><button class="btn" onclick="saveVenueAccount()">Save</button><button class="btn ghost" onclick="logout()">Log out</button></div></div>';
   };
   window.saveVenueAccount = window.saveVenueAccount || function () {
     var sess = S.session;
@@ -76,6 +81,13 @@
     store.save(S);
     toast('Saved on Me');
     showVenueAccount();
+  };
+  var prevLogout = window.logout;
+  window.logout = function () {
+    if (typeof prevLogout === 'function') prevLogout();
+    document.body.classList.remove('ss-in');
+    document.body.classList.add('gate-on');
+    paintChrome();
   };
   var prevRoute = window.route;
   window.route = function () { if (typeof prevRoute === 'function') prevRoute(); paintChrome(); };
