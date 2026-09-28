@@ -15,7 +15,42 @@
     var a = avg(id);
     return a ? stars(a.score) + ' ' + a.score + ' (' + a.n + ')' : 'No ratings yet';
   };
-  function met() {
+  function fixtureIdFor(u) {
+    if (!u) return 'f1';
+    if (window.S && S.watching && S.watching[u.id]) return S.watching[u.id];
+    if (u.watching) return u.watching;
+    var h = Object.values(S.heading || {}).find(function (x) { return x.userId === u.id; });
+    if (h) return h.fixtureId;
+    return 'f1';
+  }
+  function fixtureBy(id) {
+    return (SEED.fixtures || []).find(function (f) { return f.id === id; }) || (SEED.fixtures || [])[0] || { id: 'f1', sport: 'AFL', label: 'Dockers vs Cats' };
+  }
+  function sideOf(u, fid) {
+    if (!u) return '';
+    if (S.sidePin && S.sidePin[u.id]) return S.sidePin[u.id];
+    var f = fixtureBy(fid);
+    var sport = f.sport || 'AFL';
+    if (u.clubs && u.clubs[sport]) return u.clubs[sport];
+    return '';
+  }
+  function teamsOf(fid) {
+    var f = fixtureBy(fid);
+    if (f.label && f.label.indexOf(' vs ') >= 0) return f.label.split(' vs ').map(function (s) { return s.trim(); });
+    return [f.home || 'Home', f.away || 'Away'];
+  }
+  function canRate(rater, target, fid) {
+    var winner = S.results && S.results[fid];
+    if (!winner) return { ok: false, why: 'Result is not in yet.' };
+    var mine = sideOf(rater, fid);
+    var theirs = sideOf(target, fid);
+    if (!mine) return { ok: false, why: 'Pick your side in the lounge first.' };
+    if (mine !== winner) return { ok: false, why: 'Your side lost, so you do not rate.' };
+    if (!theirs) return { ok: false, why: 'They have not picked a side.' };
+    if (theirs === winner) return { ok: true, why: 'Same winning side.' };
+    return { ok: true, why: 'They lost. Rate how they took it.' };
+  }
+  function met() { {
     var u = me();
     if (!u) return [];
     var ids = {};
@@ -39,19 +74,49 @@
     if (!main) return;
     var box = document.createElement('div');
     box.className = 'card';
-    box.innerHTML = '<h3>Rate the table</h3><p class="muted">After the siren. Stars = showed up and respectful. Not who won.</p>' +
-      met().map(function (p) {
-        var a = avg(p.id);
-        return '<div class="item"><h3>' + p.name + '</h3><p class="muted">' + (a ? stars(a.score) + ' ' + a.score : 'No rating yet') + '</p><div class="row">' +
-          [1,2,3,4,5].map(function (n) { return '<button class="btn ghost" onclick="rateStars(\'' + p.id + '\',' + n + ')">' + n + '\u2605</button>'; }).join('') +
-          '</div><button class="btn ghost" style="margin-top:8px" onclick="reportUser(\'' + p.id + '\')">Report</button></div>';
-      }).join('');
+    var u = me();
+    var fid = fixtureIdFor(u);
+    var f = fixtureBy(fid);
+    var winner = S.results && S.results[fid];
+    var teams = teamsOf(fid);
+    var mine = sideOf(u, fid);
+    var intro = '<h3>Rate how they took it</h3><p class="muted">Only the winning side rates. If your team lost, no rating from you. Stars are about how someone behaved in the loss.</p>' +
+      '<p class="body">' + f.label + (mine ? ' · you went for ' + mine : ' · pick a side in the lounge') + (winner ? ' · ' + winner + ' won' : ' · no result yet') + '</p>' +
+      '<div class="row" style="flex-wrap:wrap;gap:8px;margin-bottom:10px">' + teams.map(function (tm) {
+        return '<button class="btn ghost" onclick="setGameWinner(\'' + fid + '\',\'' + tm.replace(/'/g, '') + '\')">' + tm + ' won</button>';
+      }).join('') + '</div>';
+    var rows = met().map(function (p) {
+      var a = avg(p.id);
+      var gate = canRate(u, p, fid);
+      var theirSide = sideOf(p, fid);
+      var buttons = gate.ok
+        ? '<div class="row">' + [1,2,3,4,5].map(function (n) { return '<button class="btn ghost" onclick="rateStars(\'' + p.id + '\',' + n + ')">' + n + '\u2605</button>'; }).join('') + '</div>'
+        : '<p class="muted">' + gate.why + '</p>';
+      return '<div class="item"><h3>' + p.name + '</h3><p class="muted">' + (theirSide || 'No side yet') + ' · ' + (a ? stars(a.score) + ' ' + a.score : 'No rating yet') + '</p>' + buttons +
+        '<button class="btn ghost" style="margin-top:8px" onclick="reportUser(\'' + p.id + '\')">Report</button></div>';
+    }).join('');
+    if (mine && winner && mine !== winner) {
+      rows = '<p class="body">Your side lost. You do not rate tonight. Winning fans can rate how you took it.</p>' + rows.replace(/<div class="row">[\s\S]*?<\/div>/g, '<p class="muted">No rating from a losing side.</p>');
+    }
+    box.innerHTML = intro + rows;
     main.appendChild(box);
   };
+  window.setGameWinner = function (fid, team) {
+    S.results = S.results || {};
+    S.results[fid] = team;
+    store.save(S);
+    toast(team + ' won');
+    renderMe();
+  };
   window.rateStars = function (id, score) {
+    var u = me();
+    var target = (S.users || []).find(function (x) { return x.id === id; });
+    var fid = fixtureIdFor(u);
+    var gate = canRate(u, target || {}, fid);
+    if (!gate.ok) { toast(gate.why); return; }
     S.ratings = S.ratings || { venues: {}, people: {} };
-    S.ratings.people[id] = (S.ratings.people[id] || []).filter(function (r) { return r.user !== (me() || {}).name; });
-    S.ratings.people[id].push({ user: (me() || {}).name, score: score, at: Date.now() });
+    S.ratings.people[id] = (S.ratings.people[id] || []).filter(function (r) { return r.user !== (u || {}).name; });
+    S.ratings.people[id].push({ user: (u || {}).name, score: score, at: Date.now(), side: sideOf(target, fid), bySide: sideOf(u, fid) });
     store.save(S);
     toast('Rated ' + score + ' stars');
     renderMe();
