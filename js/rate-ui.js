@@ -50,7 +50,7 @@
     if (theirs === winner) return { ok: true, why: 'Same winning side.' };
     return { ok: true, why: 'They lost. Rate how they took it.' };
   }
-  function met() { {
+  function met() {
     var u = me();
     if (!u) return [];
     var ids = {};
@@ -96,7 +96,7 @@
         '<button class="btn ghost" style="margin-top:8px" onclick="reportUser(\'' + p.id + '\')">Report</button></div>';
     }).join('');
     if (mine && winner && mine !== winner) {
-      rows = '<p class="body">Your side lost. You do not rate tonight. Winning fans can rate how you took it.</p>' + rows.replace(/<div class="row">[\s\S]*?<\/div>/g, '<p class="muted">No rating from a losing side.</p>');
+      rows = '<p class="body">Your side lost. You do not rate tonight. Winning fans can rate how you took it.</p>';
     }
     box.innerHTML = intro + rows;
     main.appendChild(box);
