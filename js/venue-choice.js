@@ -128,9 +128,13 @@
     var card = document.createElement('div');
     card.id = 'choice-card';
     card.className = 'card';
-    card.innerHTML = '<h3>' + (p.mode === 'drop' ? 'Not going?' : 'Change where you are going?') + '</h3><p class="body">' +
-      (p.mode === 'drop' ? 'You will come off the list.' : ('From ' + ((from && from.name) || 'the other pub') + ' to ' + ((to && to.name) || 'this pub') + '.')) +
-      '</p><label class="plan"><input type="checkbox" id="better-yes" /> <b>Yes</b> — I am changing for a better offer</label><div class="row" style="margin-top:10px"><button class="btn" onclick="confirmSeatChange()">Confirm</button><button class="btn ghost" onclick="document.getElementById(\'choice-card\').remove()">Cancel</button></div>';
+    card.innerHTML = '<h3>' + (p.mode === 'drop' ? 'Check out?' : 'Check out and change venue') + '</h3><p class="body">' +
+      (p.mode === 'drop'
+        ? 'Check out of ' + ((from && from.name) || 'this pub') + '. You come off their list.'
+        : 'Check out of ' + ((from && from.name) || 'the other pub') + ' and go to ' + ((to && to.name) || 'this pub') + '.') +
+      '</p><label class="plan"><input type="checkbox" id="checkout-yes" /> <b>Check out</b> of ' + ((from && from.name) || 'the current pub') + '</label>' +
+      '<label class="plan"><input type="checkbox" id="better-yes" /> <b>Yes</b> — I am changing for a better offer</label>' +
+      '<div class="row" style="margin-top:10px"><button class="btn" onclick="confirmSeatChange()">Confirm</button><button class="btn ghost" onclick="document.getElementById(\'choice-card\').remove()">Cancel</button></div>';
     main.insertBefore(card, main.firstChild);
   }
   window.headTo = function (vid, fid) {
@@ -153,7 +157,9 @@
     paintChoice({ mode: 'drop', fid: fid, from: S.heading[u.id + fid].venueId });
   };
   window.confirmSeatChange = function () {
+    var out = document.getElementById('checkout-yes');
     var box = document.getElementById('better-yes');
+    if (!out || !out.checked) { toast('Tick check out of the pub you are leaving.'); return; }
     if (!box || !box.checked) { toast('Tick yes if you are changing for a better offer.'); return; }
     var p = window._choice || {};
     var u = me();
@@ -183,8 +189,26 @@
       var v = typeof venue === 'function' ? venue(row.venueId) : null;
       var note = document.createElement('div');
       note.className = 'card';
-      note.innerHTML = '<p class="body">You are going to <b>' + ((v && v.name) || 'a pub') + '</b> for ' + f.label + '.</p><button class="btn ghost" onclick="notGoing(\'' + f.id + '\')">Not going</button>';
-      main.appendChild(note);
+      note.innerHTML = '<p class="body">You are going to <b>' + ((v && v.name) || 'a pub') + '</b> for ' + f.label + '.</p><button class="btn" onclick="notGoing(\'' + f.id + '\')">Check out</button>';
+      main.insertBefore(note, main.firstChild);
+    });
+    var current = null;
+    Object.keys(S.heading || {}).forEach(function (k) {
+      var h = S.heading[k];
+      if (h && h.userId === u.id) current = h;
+    });
+    if (!current) return;
+    [].slice.call(main.querySelectorAll('button')).forEach(function (btn) {
+      var oc = btn.getAttribute('onclick') || '';
+      var m = oc.match(/headTo\('([^']+)','([^']+)'\)/);
+      if (!m) return;
+      if (m[1] === current.venueId) {
+        btn.textContent = 'Check out';
+        btn.setAttribute('onclick', "notGoing('" + current.fixtureId + "')");
+      } else {
+        btn.textContent = 'Check out and take this offer';
+        btn.setAttribute('onclick', "headTo('" + m[1] + "','" + current.fixtureId + "')");
+      }
     });
   };
 })();
