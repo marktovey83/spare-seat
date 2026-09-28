@@ -70,6 +70,7 @@
   var prevMe = window.renderMe;
   window.renderMe = function () {
     if (typeof prevMe === 'function') prevMe();
+    if (typeof refreshScores === 'function') refreshScores();
     var main = document.getElementById('main');
     if (!main) return;
     var box = document.createElement('div');
@@ -78,20 +79,22 @@
     var fid = fixtureIdFor(u);
     var f = fixtureBy(fid);
     var winner = S.results && S.results[fid];
-    var teams = teamsOf(fid);
     var mine = sideOf(u, fid);
-    var intro = '<h3>Rate how they took it</h3><p class="muted">Only the winning side rates. If your team lost, no rating from you. Stars are about how someone behaved in the loss.</p>' +
-      '<p class="body">' + f.label + (mine ? ' · you went for ' + mine : ' · pick a side in the lounge') + (winner ? ' · ' + winner + ' won' : ' · no result yet') + '</p>' +
-      '<div class="row" style="flex-wrap:wrap;gap:8px;margin-bottom:10px">' + teams.map(function (tm) {
-        return '<button class="btn ghost" onclick="setGameWinner(\'' + fid + '\',\'' + tm.replace(/'/g, '') + '\')">' + tm + ' won</button>';
-      }).join('') + '</div>';
+    var line = (S.scoreline && S.scoreline[fid]) || '';
+    var intro = '<h3>Rate how they took it</h3><p class="muted">The score updates the result. Only the winning side rates, on Me. If your team lost, you do not rate. You can change the stars you gave for 24 hours.</p>' +
+      '<p class="body">' + f.label + (mine ? ' · you went for ' + mine : ' · pick a side in the lounge') + (line ? ' · ' + line : ' · waiting on the score') + '</p>';
     var rows = met().map(function (p) {
       var a = avg(p.id);
       var gate = canRate(u, p, fid);
       var theirSide = sideOf(p, fid);
-      var buttons = gate.ok
-        ? '<div class="row">' + [1,2,3,4,5].map(function (n) { return '<button class="btn ghost" onclick="rateStars(\'' + p.id + '\',' + n + ')">' + n + '\u2605</button>'; }).join('') + '</div>'
-        : '<p class="muted">' + gate.why + '</p>';
+      var mineRow = ((S.ratings && S.ratings.people && S.ratings.people[p.id]) || []).find(function (r) { return r.user === (u || {}).name; });
+      var left = mineRow ? (24 * 3600000) - (Date.now() - (mineRow.firstAt || mineRow.at || 0)) : 0;
+      var locked = mineRow && left <= 0;
+      var buttons = !gate.ok
+        ? '<p class="muted">' + gate.why + '</p>'
+        : locked
+          ? '<p class="muted">You gave ' + mineRow.score + ' stars. The 24 hours to change it is up.</p>'
+          : '<p class="muted">' + (mineRow ? 'You gave ' + mineRow.score + ' stars. Change them for another ' + Math.ceil(left / 3600000) + 'h.' : 'Your stars. You can change them for 24 hours.') + '</p><div class="row">' + [1,2,3,4,5].map(function (n) { return '<button class="btn ghost" onclick="rateStars(\'' + p.id + '\',' + n + ')">' + n + '\u2605</button>'; }).join('') + '</div>';
       return '<div class="item"><h3>' + p.name + '</h3><p class="muted">' + (theirSide || 'No side yet') + ' · ' + (a ? stars(a.score) + ' ' + a.score : 'No rating yet') + '</p>' + buttons +
         '<button class="btn ghost" style="margin-top:8px" onclick="reportUser(\'' + p.id + '\')">Report</button></div>';
     }).join('');
@@ -101,13 +104,6 @@
     box.innerHTML = intro + rows;
     main.appendChild(box);
   };
-  window.setGameWinner = function (fid, team) {
-    S.results = S.results || {};
-    S.results[fid] = team;
-    store.save(S);
-    toast(team + ' won');
-    renderMe();
-  };
   window.rateStars = function (id, score) {
     var u = me();
     var target = (S.users || []).find(function (x) { return x.id === id; });
@@ -115,8 +111,11 @@
     var gate = canRate(u, target || {}, fid);
     if (!gate.ok) { toast(gate.why); return; }
     S.ratings = S.ratings || { venues: {}, people: {} };
+    var prior = (S.ratings.people[id] || []).find(function (r) { return r.user === (u || {}).name; });
+    var firstAt = prior && (prior.firstAt || prior.at);
+    if (firstAt && Date.now() - firstAt > 24 * 3600000) { toast('24 hours is up. That rating stays.'); return; }
     S.ratings.people[id] = (S.ratings.people[id] || []).filter(function (r) { return r.user !== (u || {}).name; });
-    S.ratings.people[id].push({ user: (u || {}).name, score: score, at: Date.now(), side: sideOf(target, fid), bySide: sideOf(u, fid) });
+    S.ratings.people[id].push({ user: (u || {}).name, score: score, at: Date.now(), firstAt: firstAt || Date.now(), side: sideOf(target, fid), bySide: sideOf(u, fid) });
     store.save(S);
     toast('Rated ' + score + ' stars');
     renderMe();
