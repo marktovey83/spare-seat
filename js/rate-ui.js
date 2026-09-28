@@ -70,7 +70,6 @@
   var prevMe = window.renderMe;
   window.renderMe = function () {
     if (typeof prevMe === 'function') prevMe();
-    if (typeof refreshScores === 'function') refreshScores();
     var main = document.getElementById('main');
     if (!main) return;
     var box = document.createElement('div');
