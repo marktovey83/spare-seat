@@ -1,21 +1,7 @@
 # Spare Seat
 
-Don't watch it alone.
+Person-to-person chat for people watching the same game.
 
-Spare Seat is a meetup app so you do not watch the game by yourself. Find a pub showing it, hold a seat, check in, and sit with other fans.
+Free is a 10 km ring from where you are now, with ads. Plus is $10 a month: anywhere in the country, no ads, and chats and friends are saved. On the free plan, a chat and that friend drop off 48 hours after the last message. Ratings stay.
 
-Demo: today's fixtures, pub pins, held seats, check-in, shared table deals, ratings, Plus, venue door list, and an admin view of each area.
-
-## Run it
-
-Open `index.html` in a browser.
-
-Live demo: https://marktovey83.github.io/spare-seat/
-
-## Demo logins
-
-| Role | How to sign in |
-|---|---|
-| User | **User** → Log in as `Dave` / `seat` |
-| Venue | **Venue** → listed pub, PIN `4821` |
-| Admin | **Admin** → `admin` / `spareseat` |
+Open the site: https://marktovey83.github.io/spare-seat/
